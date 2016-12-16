@@ -20,10 +20,8 @@ import com.liferay.blogs.web.constants.BlogsPortletKeys;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorCriterion;
 import com.liferay.item.selector.ItemSelectorReturnType;
-import com.liferay.item.selector.criteria.audio.criterion.AudioItemSelectorCriterion;
 import com.liferay.item.selector.criteria.file.criterion.FileItemSelectorCriterion;
 import com.liferay.item.selector.criteria.image.criterion.ImageItemSelectorCriterion;
-import com.liferay.item.selector.criteria.video.criterion.VideoItemSelectorCriterion;
 import com.liferay.portal.kernel.editor.configuration.BaseEditorConfigContributor;
 import com.liferay.portal.kernel.editor.configuration.EditorConfigContributor;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -88,10 +86,8 @@ public class AdaptiveMediaBlogsEditorConfigContributor
 				itemSelectorCriteria) {
 
 			if (itemSelectorCriterion instanceof BlogsItemSelectorCriterion ||
-				itemSelectorCriterion instanceof AudioItemSelectorCriterion ||
 				itemSelectorCriterion instanceof FileItemSelectorCriterion ||
-				itemSelectorCriterion instanceof ImageItemSelectorCriterion ||
-				itemSelectorCriterion instanceof VideoItemSelectorCriterion) {
+				itemSelectorCriterion instanceof ImageItemSelectorCriterion) {
 
 				addImageAdaptiveMediaURLItemSelectorReturnType(
 					itemSelectorCriterion);
