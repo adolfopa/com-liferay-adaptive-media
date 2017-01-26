@@ -16,13 +16,10 @@ package com.liferay.adaptive.media.image.internal.util;
 
 import com.liferay.adaptive.media.AdaptiveMediaRuntimeException;
 import com.liferay.adaptive.media.image.configuration.ImageAdaptiveMediaConfigurationEntry;
-import com.liferay.adaptive.media.image.internal.configuration.ImageAdaptiveMediaAttributeMapping;
-import com.liferay.adaptive.media.image.processor.ImageAdaptiveMediaAttribute;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.image.ImageToolUtil;
-import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
-import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.repository.model.FileVersion;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 
 import java.awt.image.RenderedImage;
@@ -31,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.Iterator;
-import java.util.Optional;
+import java.util.Map;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -50,36 +47,20 @@ public class ImageProcessor {
 		return _supportedMimeTypes.contains(mimeType);
 	}
 
-	public InputStream process(
+	public RenderedImage scaleImage(
 		FileVersion fileVersion,
 		ImageAdaptiveMediaConfigurationEntry configurationEntry) {
 
 		try {
-			ImageAdaptiveMediaAttributeMapping attributeMapping =
-				ImageAdaptiveMediaAttributeMapping.fromProperties(
-					configurationEntry.getProperties());
-
-			Optional<Integer> heightOptional =
-				attributeMapping.getAttributeValue(
-					ImageAdaptiveMediaAttribute.IMAGE_HEIGHT);
-
-			Optional<Integer> widthOptional =
-				attributeMapping.getAttributeValue(
-					ImageAdaptiveMediaAttribute.IMAGE_WIDTH);
-
 			RenderedImage renderedImage = _readImage(
 				fileVersion.getContentStream(false));
 
-			RenderedImage scaledImage = ImageToolUtil.scale(
-				renderedImage, heightOptional.orElse(0),
-				widthOptional.orElse(0));
+			Map<String, String> properties = configurationEntry.getProperties();
 
-			UnsyncByteArrayOutputStream baos =
-				new UnsyncByteArrayOutputStream();
+			int maxHeight = GetterUtil.getInteger(properties.get("max-height"));
+			int maxWidth = GetterUtil.getInteger(properties.get("max-width"));
 
-			ImageToolUtil.write(scaledImage, fileVersion.getMimeType(), baos);
-
-			return new UnsyncByteArrayInputStream(baos.toByteArray());
+			return ImageToolUtil.scale(renderedImage, maxHeight, maxWidth);
 		}
 		catch (IOException | PortalException e) {
 			throw new AdaptiveMediaRuntimeException.IOException(e);

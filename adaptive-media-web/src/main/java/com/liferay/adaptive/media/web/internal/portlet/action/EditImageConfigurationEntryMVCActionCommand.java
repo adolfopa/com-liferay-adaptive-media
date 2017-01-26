@@ -58,13 +58,13 @@ public class EditImageConfigurationEntryMVCActionCommand
 
 		String name = ParamUtil.getString(actionRequest, "name");
 		String uuid = ParamUtil.getString(actionRequest, "uuid");
-		String maxWidth = ParamUtil.getString(actionRequest, "maxWidth");
 		String maxHeight = ParamUtil.getString(actionRequest, "maxHeight");
+		String maxWidth = ParamUtil.getString(actionRequest, "maxWidth");
 
 		Map<String, String> properties = new HashMap<>();
 
-		properties.put("height", maxHeight);
-		properties.put("width", maxWidth);
+		properties.put("max-height", maxHeight);
+		properties.put("max-width", maxWidth);
 
 		Optional<ImageAdaptiveMediaConfigurationEntry>
 			configurationEntryOptional =
