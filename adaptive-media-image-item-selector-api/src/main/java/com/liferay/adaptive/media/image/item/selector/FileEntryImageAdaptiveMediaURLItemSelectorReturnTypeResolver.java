@@ -116,8 +116,8 @@ public class FileEntryImageAdaptiveMediaURLItemSelectorReturnTypeResolver
 		JSONObject attributesJSONObject = JSONFactoryUtil.createJSONObject();
 
 		widthOptional.ifPresent(
-			width -> {
-				attributesJSONObject.put("max-width", width + "px");
+			maxWidth -> {
+				attributesJSONObject.put("max-width", maxWidth + "px");
 
 				if (previousAdaptiveMedia != null) {
 					Optional<Integer> previousWidthOptional =
@@ -125,9 +125,9 @@ public class FileEntryImageAdaptiveMediaURLItemSelectorReturnTypeResolver
 							ImageAdaptiveMediaAttribute.IMAGE_WIDTH);
 
 					previousWidthOptional.ifPresent(
-						previousWidth ->
+						previousMaxWidth ->
 							attributesJSONObject.put(
-								"min-width", previousWidth + "px"));
+								"min-width", previousMaxWidth + "px"));
 				}
 			});
 

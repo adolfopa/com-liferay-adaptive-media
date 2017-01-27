@@ -197,20 +197,20 @@ public class ImageAdaptiveMediaConfigurationHelperImpl
 	private void _checkProperties(Map<String, String> properties)
 		throws ImageAdaptiveMediaConfigurationException {
 
-		long width = GetterUtil.getLong(properties.get("width"));
+		long maxHeight = GetterUtil.getLong(properties.get("max-height"));
 
-		if (width <= 0) {
-			throw new
-				ImageAdaptiveMediaConfigurationException.
-					InvalidWidthException();
-		}
-
-		long height = GetterUtil.getLong(properties.get("height"));
-
-		if (height <= 0) {
+		if (maxHeight <= 0) {
 			throw new
 				ImageAdaptiveMediaConfigurationException.
 					InvalidHeightException();
+		}
+
+		long maxWidth = GetterUtil.getLong(properties.get("max-width"));
+
+		if (maxWidth <= 0) {
+			throw new
+				ImageAdaptiveMediaConfigurationException.
+					InvalidWidthException();
 		}
 	}
 

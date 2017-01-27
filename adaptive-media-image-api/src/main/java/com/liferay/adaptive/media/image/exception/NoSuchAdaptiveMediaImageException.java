@@ -11,28 +11,31 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+package com.liferay.adaptive.media.image.exception;
 
-package com.liferay.adaptive.media.image.internal.util;
+import aQute.bnd.annotation.ProviderType;
+
+import com.liferay.portal.kernel.exception.NoSuchModelException;
 
 /**
- * @author Sergio González
+ * @author Brian Wing Shun Chan
  */
-public class ImageInfo {
+@ProviderType
+public class NoSuchAdaptiveMediaImageException extends NoSuchModelException {
 
-	public ImageInfo(String mimeType, long size) {
-		_mimeType = mimeType;
-		_size = size;
+	public NoSuchAdaptiveMediaImageException() {
 	}
 
-	public String getMimeType() {
-		return _mimeType;
+	public NoSuchAdaptiveMediaImageException(String msg) {
+		super(msg);
 	}
 
-	public long getSize() {
-		return _size;
+	public NoSuchAdaptiveMediaImageException(String msg, Throwable cause) {
+		super(msg, cause);
 	}
 
-	private final String _mimeType;
-	private final long _size;
+	public NoSuchAdaptiveMediaImageException(Throwable cause) {
+		super(cause);
+	}
 
 }
