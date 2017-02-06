@@ -14,22 +14,27 @@
 
 package com.liferay.adaptive.media.web.internal.portlet.configuration.icon;
 
-import com.liferay.adaptive.media.image.configuration.ImageAdaptiveMediaConfigurationHelper;
 import com.liferay.adaptive.media.web.constants.AdaptiveMediaPortletKeys;
 import com.liferay.adaptive.media.web.internal.background.task.OptimizeImagesAllConfigurationsBackgroundTaskExecutor;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.CompanyConstants;
-import com.liferay.portal.kernel.portlet.configuration.icon.BaseJSPPortletConfigurationIcon;
+import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.AggregateResourceBundle;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-
-import javax.servlet.ServletContext;
+import javax.portlet.PortletURL;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -42,36 +47,47 @@ import org.osgi.service.component.annotations.Reference;
 	property = {"javax.portlet.name=" + AdaptiveMediaPortletKeys.ADAPTIVE_MEDIA},
 	service = PortletConfigurationIcon.class
 )
-public class ResetDefaultValuesPortletConfigurationIcon
-	extends BaseJSPPortletConfigurationIcon {
+public class OptimizeImagesPortletConfigurationIcon
+	extends BasePortletConfigurationIcon {
 
 	@Override
 	public String getId() {
-		return "reset-default-values";
-	}
-
-	@Override
-	public String getJspPath() {
-		return "/adaptive_media/configuration/icon/reset_default_values.jsp";
+		return "optimize-images";
 	}
 
 	@Override
 	public String getMessage(PortletRequest portletRequest) {
 		return LanguageUtil.get(
 			getResourceBundle(getLocale(portletRequest)),
-			"reset-default-values");
+			"optimize-all-images");
+	}
+
+	@Override
+	public ResourceBundle getResourceBundle(Locale locale) {
+		ResourceBundle bundleResourceBundle = ResourceBundleUtil.getBundle(
+			"content.Language", locale, getClass());
+
+		return new AggregateResourceBundle(
+			bundleResourceBundle, super.getResourceBundle(locale));
 	}
 
 	@Override
 	public String getURL(
 		PortletRequest portletRequest, PortletResponse portletResponse) {
 
-		return "javascript:;";
+		PortletURL portletURL = _portal.getControlPanelPortletURL(
+			portletRequest, AdaptiveMediaPortletKeys.ADAPTIVE_MEDIA,
+			PortletRequest.ACTION_PHASE);
+
+		portletURL.setParameter(
+			ActionRequest.ACTION_NAME, "/adaptive_media/optimize_images");
+
+		return portletURL.toString();
 	}
 
 	@Override
 	public double getWeight() {
-		return 100;
+		return 101;
 	}
 
 	@Override
@@ -83,12 +99,6 @@ public class ResetDefaultValuesPortletConfigurationIcon
 			themeDisplay.getPermissionChecker();
 
 		if (!permissionChecker.isCompanyAdmin()) {
-			return false;
-		}
-
-		if (_imageAdaptiveMediaConfigurationHelper.isDefaultConfiguration(
-				themeDisplay.getCompanyId())) {
-
 			return false;
 		}
 
@@ -106,28 +116,10 @@ public class ResetDefaultValuesPortletConfigurationIcon
 		return true;
 	}
 
-	@Override
-	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.adaptive.media.web)",
-		unbind = "-"
-	)
-	public void setServletContext(ServletContext servletContext) {
-		super.setServletContext(servletContext);
-	}
-
-	@Reference
-	protected void setImageAdaptiveMediaConfigurationHelper(
-		ImageAdaptiveMediaConfigurationHelper
-			imageAdaptiveMediaConfigurationHelper) {
-
-		_imageAdaptiveMediaConfigurationHelper =
-			imageAdaptiveMediaConfigurationHelper;
-	}
-
 	@Reference
 	private BackgroundTaskManager _backgroundTaskManager;
 
-	private ImageAdaptiveMediaConfigurationHelper
-		_imageAdaptiveMediaConfigurationHelper;
+	@Reference
+	private Portal _portal;
 
 }

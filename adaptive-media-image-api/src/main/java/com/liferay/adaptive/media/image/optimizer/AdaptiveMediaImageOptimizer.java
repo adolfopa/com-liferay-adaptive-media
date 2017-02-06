@@ -12,20 +12,18 @@
  * details.
  */
 
-package com.liferay.adaptive.media.image.processor;
+package com.liferay.adaptive.media.image.optimizer;
 
-import com.liferay.adaptive.media.AdaptiveMediaException;
-import com.liferay.adaptive.media.processor.AdaptiveMediaProcessor;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.repository.model.FileVersion;
+import aQute.bnd.annotation.ProviderType;
 
 /**
- * @author Adolfo Pérez
+ * @author Sergio González
  */
-public interface ImageAdaptiveMediaProcessor
-	extends AdaptiveMediaProcessor<FileVersion, ImageAdaptiveMediaProcessor> {
+@ProviderType
+public interface AdaptiveMediaImageOptimizer {
 
-	public void process(FileVersion fileVersion, String configurationEntryUuid)
-		throws AdaptiveMediaException, PortalException;
+	public void optimize(long companyId);
+
+	public void optimize(long companyId, String configurationEntryUuid);
 
 }

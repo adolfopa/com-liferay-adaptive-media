@@ -12,20 +12,13 @@
  * details.
  */
 
-package com.liferay.adaptive.media.image.processor;
-
-import com.liferay.adaptive.media.AdaptiveMediaException;
-import com.liferay.adaptive.media.processor.AdaptiveMediaProcessor;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.repository.model.FileVersion;
+package com.liferay.adaptive.media.image.counter;
 
 /**
- * @author Adolfo Pérez
+ * @author Sergio González
  */
-public interface ImageAdaptiveMediaProcessor
-	extends AdaptiveMediaProcessor<FileVersion, ImageAdaptiveMediaProcessor> {
+public interface AdaptiveMediaImageCounter {
 
-	public void process(FileVersion fileVersion, String configurationEntryUuid)
-		throws AdaptiveMediaException, PortalException;
+	public int countExpectedAdaptiveMediaImages(long companyId);
 
 }
