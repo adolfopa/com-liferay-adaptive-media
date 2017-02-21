@@ -90,12 +90,26 @@ public class ImageAdaptiveMediaFinderImpl implements ImageAdaptiveMediaFinder {
 			return Stream.empty();
 		}
 
-		Collection<ImageAdaptiveMediaConfigurationEntry> configurationEntries =
-			_configurationHelper.getImageAdaptiveMediaConfigurationEntries(
-				fileVersion.getCompanyId());
-
 		BiFunction<FileVersion, ImageAdaptiveMediaConfigurationEntry, URI>
 			uriFactory = _getURIFactory(queryBuilder);
+
+		ImageAdaptiveMediaQueryBuilder.ConfigurationStatus configurationStatus =
+			queryBuilder.getConfigurationStatus();
+
+		if (configurationStatus == null) {
+			if (queryBuilder.hasConfiguration()) {
+				configurationStatus =
+					ImageAdaptiveMediaQueryBuilder.ConfigurationStatus.ALL;
+			}
+			else {
+				configurationStatus =
+					ImageAdaptiveMediaQueryBuilder.ConfigurationStatus.ENABLED;
+			}
+		}
+
+		Collection<ImageAdaptiveMediaConfigurationEntry> configurationEntries =
+			_configurationHelper.getImageAdaptiveMediaConfigurationEntries(
+				fileVersion.getCompanyId(), configurationStatus.getPredicate());
 
 		if (queryBuilder.hasConfiguration()) {
 			return configurationEntries.stream().filter(
