@@ -6,3 +6,4 @@ test-coverage/
 test-results/
 *~
 *.iml
+.sass-cache
