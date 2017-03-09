@@ -344,6 +344,14 @@ public class AdaptiveMediaImageLocalServiceUtil {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
+	public static void deleteAdaptiveMediaImageConfigurationEntry(
+		long companyId,
+		com.liferay.adaptive.media.image.configuration.ImageAdaptiveMediaConfigurationEntry configurationEntry) {
+		getService()
+			.deleteAdaptiveMediaImageConfigurationEntry(companyId,
+			configurationEntry);
+	}
+
 	public static void deleteAdaptiveMediaImageFileVersion(long fileVersionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().deleteAdaptiveMediaImageFileVersion(fileVersionId);
