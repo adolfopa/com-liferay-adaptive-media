@@ -52,10 +52,11 @@ public class AdaptiveMediaImageHTMLTagFactoryImplTest {
 
 		StringBundler expectedSB = new StringBundler(5);
 
-		expectedSB.append("<picture>");
+		expectedSB.append("<picture data-fileEntryId=\"0\">");
 		expectedSB.append("<source media=\"(max-width:1989px)\" ");
 		expectedSB.append("srcset=\"adaptiveURL\"/>");
-		expectedSB.append("<img src=\"originalURL\"/>");
+		expectedSB.append(
+			"<img src=\"originalURL\" data-fileEntryId=\"1234\"/>");
 		expectedSB.append("</picture>");
 
 		String originalImgTag =
@@ -77,12 +78,13 @@ public class AdaptiveMediaImageHTMLTagFactoryImplTest {
 
 		StringBundler expectedSB = new StringBundler(8);
 
-		expectedSB.append("<picture>");
+		expectedSB.append("<picture data-fileEntryId=\"0\">");
 		expectedSB.append("<source media=\"(max-width:1986px)\" ");
 		expectedSB.append("srcset=\"adaptiveURL1\"/>");
 		expectedSB.append("<source media=\"(max-width:1989px)\" ");
 		expectedSB.append("srcset=\"adaptiveURL2\"/>");
-		expectedSB.append("<img src=\"originalURL\"/>");
+		expectedSB.append(
+			"<img src=\"originalURL\" data-fileEntryId=\"1234\"/>");
 		expectedSB.append("</picture>");
 
 		String originalImgTag =
@@ -121,9 +123,10 @@ public class AdaptiveMediaImageHTMLTagFactoryImplTest {
 
 		StringBundler expectedSB = new StringBundler(6);
 
-		expectedSB.append("<picture>");
+		expectedSB.append("<picture data-fileEntryId=\"0\">");
 		expectedSB.append("<source media=\"(max-width:1989px)\" ");
-		expectedSB.append("srcset=\"adaptiveURL\"/><img ");
+		expectedSB.append(
+			"srcset=\"adaptiveURL\"/><img data-fileEntryId=\"1234\" ");
 		expectedSB.append(CharPool.NEW_LINE);
 		expectedSB.append("src=\"adaptable\"/>");
 		expectedSB.append("</picture>");
@@ -140,10 +143,11 @@ public class AdaptiveMediaImageHTMLTagFactoryImplTest {
 
 		StringBundler expectedSB = new StringBundler(5);
 
-		expectedSB.append("<picture>");
+		expectedSB.append("<picture data-fileEntryId=\"0\">");
 		expectedSB.append("<source media=\"(max-width:1989px)\" ");
 		expectedSB.append("srcset=\"adaptiveURL\"/>");
-		expectedSB.append("<img src=\"originalURL\"/>");
+		expectedSB.append(
+			"<img src=\"originalURL\" datA-fileENTryID=\"1234\"/>");
 		expectedSB.append("</picture>");
 
 		String originalImgTag =
