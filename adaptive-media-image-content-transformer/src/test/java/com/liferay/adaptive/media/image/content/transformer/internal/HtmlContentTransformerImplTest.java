@@ -59,7 +59,7 @@ public class HtmlContentTransformerImplTest {
 
 		Mockito.when(
 			_adaptiveMediaImageHTMLTagFactory.create(
-				"<img data-fileEntryId=\"1989\" src=\"adaptable\"/>",
+				"<img data-fileEntryId=\"1989\" src=\"adaptable\" />",
 				_fileEntry)
 		).thenReturn(
 			"<whatever></whatever>"
@@ -69,14 +69,14 @@ public class HtmlContentTransformerImplTest {
 
 		expectedSB.append("<div><div>");
 		expectedSB.append("<whatever></whatever>");
-		expectedSB.append("</div></div><br/>");
+		expectedSB.append("</div></div><br />");
 
 		StringBundler originalSB = new StringBundler(4);
 
 		originalSB.append("<div><div>");
 		originalSB.append("<img data-fileEntryId=\"1989\" ");
-		originalSB.append("src=\"adaptable\"/>");
-		originalSB.append("</div></div><br/>");
+		originalSB.append("src=\"adaptable\" />");
+		originalSB.append("</div></div><br />");
 
 		Assert.assertEquals(
 			_duplicateWithNewLine(expectedSB.toString()),
@@ -97,17 +97,17 @@ public class HtmlContentTransformerImplTest {
 
 		Mockito.when(
 			_adaptiveMediaImageHTMLTagFactory.create(
-				"<img data-fileEntryId=\"1989\" src=\"adaptable\"/>",
+				"<img data-fileEntryId=\"1989\" src=\"adaptable\" />",
 				_fileEntry)
 		).thenReturn(
 			"<whatever></whatever>"
 		);
 
 		Assert.assertEquals(
-			"<img src=\"not-adaptable\"/><whatever></whatever>",
+			"<img src=\"not-adaptable\" /><whatever></whatever>",
 			_htmlContentTransformer.transform(
-				"<img src=\"not-adaptable\"/>" +
-					"<img data-fileEntryId=\"1989\" src=\"adaptable\"/>"));
+				"<img src=\"not-adaptable\" />" +
+					"<img data-fileEntryId=\"1989\" src=\"adaptable\" />"));
 	}
 
 	@Test
@@ -116,7 +116,7 @@ public class HtmlContentTransformerImplTest {
 
 		Mockito.when(
 			_adaptiveMediaImageHTMLTagFactory.create(
-				"<img data-fileEntryId=\"1989\" src=\"adaptable\"/>",
+				"<img data-fileEntryId=\"1989\" src=\"adaptable\" />",
 				_fileEntry)
 		).thenReturn(
 			"<whatever></whatever>"
@@ -125,14 +125,14 @@ public class HtmlContentTransformerImplTest {
 		Assert.assertEquals(
 			"<whatever></whatever>",
 			_htmlContentTransformer.transform(
-				"<img data-fileEntryId=\"1989\" src=\"adaptable\"/>"));
+				"<img data-fileEntryId=\"1989\" src=\"adaptable\" />"));
 	}
 
 	@Test
 	public void testReplacesTwoConsecutiveImageTags() throws Exception {
 		Mockito.when(
 			_adaptiveMediaImageHTMLTagFactory.create(
-				"<img data-fileEntryId=\"1989\" src=\"adaptable\"/>",
+				"<img data-fileEntryId=\"1989\" src=\"adaptable\" />",
 				_fileEntry)
 		).thenReturn(
 			"<whatever></whatever>"
@@ -141,8 +141,8 @@ public class HtmlContentTransformerImplTest {
 		Assert.assertEquals(
 			"<whatever></whatever><whatever></whatever>",
 			_htmlContentTransformer.transform(
-				"<img data-fileEntryId=\"1989\" src=\"adaptable\"/>" +
-					"<img data-fileEntryId=\"1989\" src=\"adaptable\"/>"));
+				"<img data-fileEntryId=\"1989\" src=\"adaptable\" />" +
+					"<img data-fileEntryId=\"1989\" src=\"adaptable\" />"));
 	}
 
 	@Test
@@ -163,16 +163,16 @@ public class HtmlContentTransformerImplTest {
 		throws Exception {
 
 		Assert.assertEquals(
-			"<div><div><img src=\"no.adaptable\"/></div></div>",
+			"<div><div><img src=\"no.adaptable\" /></div></div>",
 			_htmlContentTransformer.transform(
-				"<div><div><img src=\"no.adaptable\"/></div></div>"));
+				"<div><div><img src=\"no.adaptable\" /></div></div>"));
 	}
 
 	@Test
 	public void testSupportsImageTagsWithNewLineCharacters() throws Exception {
 		Mockito.when(
 			_adaptiveMediaImageHTMLTagFactory.create(
-				"<img data-fileEntryId=\"1989\" \nsrc=\"adaptable\"/>",
+				"<img data-fileEntryId=\"1989\" src=\"adaptable\" />",
 				_fileEntry)
 		).thenReturn(
 			"<whatever></whatever>"
@@ -182,7 +182,7 @@ public class HtmlContentTransformerImplTest {
 
 		originalSB.append("<img data-fileEntryId=\"1989\" ");
 		originalSB.append(CharPool.NEW_LINE);
-		originalSB.append("src=\"adaptable\"/>");
+		originalSB.append("src=\"adaptable\" />");
 
 		Assert.assertEquals(
 			"<whatever></whatever>",
@@ -193,7 +193,7 @@ public class HtmlContentTransformerImplTest {
 	public void testTheAttributeIsCaseInsensitive() throws Exception {
 		Mockito.when(
 			_adaptiveMediaImageHTMLTagFactory.create(
-				"<img data-fileentryid=\"1989\" src=\"adaptable\"/>",
+				"<img data-fileentryid=\"1989\" src=\"adaptable\" />",
 				_fileEntry)
 		).thenReturn(
 			"<whatever></whatever>"
@@ -201,14 +201,14 @@ public class HtmlContentTransformerImplTest {
 
 		StringBundler expectedSB = new StringBundler(5);
 
-		expectedSB.append("<div><div><whatever></whatever></div></div><br/>");
+		expectedSB.append("<div><div><whatever></whatever></div></div><br />");
 
 		StringBundler originalSB = new StringBundler(4);
 
 		originalSB.append("<div><div>");
 		originalSB.append("<img data-fileEntryId=\"1989\" ");
-		originalSB.append("src=\"adaptable\"/>");
-		originalSB.append("</div></div><br/>");
+		originalSB.append("src=\"adaptable\" />");
+		originalSB.append("</div></div><br />");
 
 		Assert.assertEquals(
 			expectedSB.toString(),
