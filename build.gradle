@@ -21,6 +21,9 @@ apply plugin: "com.github.kt3k.coveralls"
 apply plugin: "com.liferay.app.defaults.plugin"
 apply plugin: "jacoco"
 
+import javax.management.remote.JMXConnectorFactory as JmxFactory
+import javax.management.remote.JMXServiceURL as JmxUrl
+
 task createTempDir(type: Exec) {
 	commandLine 'mkdir', '-m', '777', '-p', "${rootDir}/build/tmpdir"
 }
@@ -320,8 +323,15 @@ task coverageReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 	}
 }
 
-tasks.coveralls {
-	dependsOn 'coverageReport'
+task dumpJacoco {
+	doLast {
+		def serverUrl = 'service:jmx:rmi:///jndi/rmi://localhost:8099/jmxrmi'
+		String beanName = "org.jacoco:type=Runtime"
+		def server = JmxFactory.connect(new JmxUrl(serverUrl)).MBeanServerConnection
+		def gmxb = new GroovyMBean(server, beanName)
+
+		gmxb.dump(true)
+	}
 }
 
 coveralls.jacocoReportPath = "build/reports/jacoco/coverageReport/coverageReport.xml"
