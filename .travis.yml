@@ -25,6 +25,6 @@ script:
   - ./gradlew test testIntegration -Pdocker
 
 after_success:
-  - ./gradlew stopJacocoRecording
-  - sleep 20
+  - ./gradlew coverageReport
+  - ./gradlew dumpJacoco
   - ./gradlew coveralls
