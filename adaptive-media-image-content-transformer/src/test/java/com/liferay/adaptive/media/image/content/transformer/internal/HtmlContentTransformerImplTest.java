@@ -206,7 +206,7 @@ public class HtmlContentTransformerImplTest {
 		StringBundler originalSB = new StringBundler(4);
 
 		originalSB.append("<div><div>");
-		originalSB.append("<img data-fileEntryId=\"1989\" ");
+		originalSB.append("<img data-FiLeENTrYId=\"1989\" ");
 		originalSB.append("src=\"adaptable\" />");
 		originalSB.append("</div></div><br />");
 
