@@ -22,8 +22,9 @@ import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -48,27 +49,20 @@ public class HtmlContentTransformerImpl implements ContentTransformer<String> {
 			return null;
 		}
 
-		StringBuffer sb = new StringBuffer(html.length());
+		Document document = _parseDocument(html);
 
-		Matcher matcher = _IMG_PATTERN.matcher(html);
-
-		while (matcher.find()) {
-			Long fileEntryId = Long.valueOf(matcher.group(1));
+		for (Element image : document.select("img[data-fileEntryId]")) {
+			long fileEntryId = Long.valueOf(image.attr("data-fileEntryId"));
 
 			FileEntry fileEntry = _dlAppLocalService.getFileEntry(fileEntryId);
 
-			String imgTag = matcher.group(0);
-
 			String adaptiveTag = _adaptiveMediaImageHTMLTagFactory.create(
-				imgTag, fileEntry);
+				image.toString(), fileEntry);
 
-			matcher.appendReplacement(
-				sb, Matcher.quoteReplacement(adaptiveTag));
+			image.replaceWith(_parseNode(adaptiveTag));
 		}
 
-		matcher.appendTail(sb);
-
-		return sb.toString();
+		return document.body().html();
 	}
 
 	@Reference(unbind = "-")
@@ -83,9 +77,26 @@ public class HtmlContentTransformerImpl implements ContentTransformer<String> {
 		_dlAppLocalService = dlAppLocalService;
 	}
 
-	private static final Pattern _IMG_PATTERN = Pattern.compile(
-		"<img [^>]*?\\s*data-fileEntryId=\"(\\d+)\".*?/>",
-		Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	private Document _parseDocument(String html) {
+		Document.OutputSettings outputSettings = new Document.OutputSettings();
+
+		outputSettings.prettyPrint(false);
+		outputSettings.syntax(Document.OutputSettings.Syntax.xml);
+
+		Document document = Jsoup.parseBodyFragment(html);
+
+		document.outputSettings(outputSettings);
+
+		return document;
+	}
+
+	private Element _parseNode(String tag) {
+		Document document = _parseDocument(tag);
+
+		Element body = document.body();
+
+		return body.child(0);
+	}
 
 	private AdaptiveMediaImageHTMLTagFactory _adaptiveMediaImageHTMLTagFactory;
 	private DLAppLocalService _dlAppLocalService;
