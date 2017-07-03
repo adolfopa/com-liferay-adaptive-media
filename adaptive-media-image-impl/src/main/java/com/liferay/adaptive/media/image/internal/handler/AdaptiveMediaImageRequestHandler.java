@@ -146,14 +146,15 @@ public class AdaptiveMediaImageRequestHandler
 			AdaptiveMediaImageAttributeMapping attributeMapping) {
 
 		try {
+			Optional<String> valueOptional = attributeMapping.getValueOptional(
+				AdaptiveMediaAttribute.configurationUuid());
+
 			Optional<AdaptiveMediaImageConfigurationEntry>
-				configurationEntryOptional = attributeMapping.getValueOptional(
-					AdaptiveMediaAttribute.configurationUuid()).flatMap(
-						configurationUuid ->
-							_configurationHelper.
-								getAdaptiveMediaImageConfigurationEntry(
-									fileVersion.getCompanyId(),
-									configurationUuid));
+				configurationEntryOptional = valueOptional.flatMap(
+					configurationUuid ->
+						_configurationHelper.
+							getAdaptiveMediaImageConfigurationEntry(
+								fileVersion.getCompanyId(), configurationUuid));
 
 			if (!configurationEntryOptional.isPresent()) {
 				return Optional.empty();
