@@ -121,453 +121,413 @@ public class FileEntryAdaptiveMediaImageURLItemSelectorReturnTypeResolverTest {
 
 	@Test
 	public void testAddingFileEntryWithHDMediaQueries() throws Exception {
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		_addTestVariant("small", "uuid0", 50, 50);
+		_addTestVariant("small.hd", "uuid1", 100, 100);
+		_addTestVariant("medium", "uuid2", 300, 300);
 
-			_addTestVariant("small", "uuid0", 50, 50);
-			_addTestVariant("small.hd", "uuid1", 100, 100);
-			_addTestVariant("medium", "uuid2", 300, 300);
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		String value = _resolver.getValue(fileEntry, null);
 
-			String value = _resolver.getValue(fileEntry, null);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
+		String defaultSource = jsonObject.getString("defaultSource");
 
-			String defaultSource = jsonObject.getString("defaultSource");
+		Assert.assertEquals(
+			DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
+			defaultSource);
 
-			Assert.assertEquals(
-				DLUtil.getPreviewURL(
-					fileEntry, fileEntry.getFileVersion(), null,
-					StringPool.BLANK, false, false),
-				defaultSource);
+		JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
 
-			JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
+		Assert.assertEquals(3, sourcesJSONArray.length());
 
-			Assert.assertEquals(3, sourcesJSONArray.length());
+		_assertHDSrcSource(
+			sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
+			"uuid0", "uuid1", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
+			"uuid1", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(2), fileEntry.getFileEntryId(),
+			"uuid2", fileEntry.getTitle());
 
-			_assertHDSrcSource(
-				sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
-				"uuid0", "uuid1", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
-				"uuid1", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(2), fileEntry.getFileEntryId(),
-				"uuid2", fileEntry.getTitle());
-
-			_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(1), 100, 50);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(2), 300, 100);
-		}
+		_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(1), 100, 50);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(2), 300, 100);
 	}
 
 	@Test
 	public void testAddingFileEntryWithImageCreatesMedia() throws Exception {
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		_addTestVariant("small", "uuid0", 50, 50);
+		_addTestVariant("big", "uuid1", 400, 280);
+		_addTestVariant("medium", "uuid2", 300, 200);
+		_addTestVariant("extra", "uuid3", 500, 330);
 
-			_addTestVariant("small", "uuid0", 50, 50);
-			_addTestVariant("big", "uuid1", 400, 280);
-			_addTestVariant("medium", "uuid2", 300, 200);
-			_addTestVariant("extra", "uuid3", 500, 330);
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		String value = _resolver.getValue(fileEntry, null);
 
-			String value = _resolver.getValue(fileEntry, null);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
+		String defaultSource = jsonObject.getString("defaultSource");
 
-			String defaultSource = jsonObject.getString("defaultSource");
+		Assert.assertEquals(
+			DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
+			defaultSource);
 
-			Assert.assertEquals(
-				DLUtil.getPreviewURL(
-					fileEntry, fileEntry.getFileVersion(), null,
-					StringPool.BLANK, false, false),
-				defaultSource);
+		JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
 
-			JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
+		Assert.assertEquals(4, sourcesJSONArray.length());
 
-			Assert.assertEquals(4, sourcesJSONArray.length());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
+			"uuid0", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
+			"uuid2", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(2), fileEntry.getFileEntryId(),
+			"uuid1", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(3), fileEntry.getFileEntryId(),
+			"uuid3", fileEntry.getTitle());
 
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
-				"uuid0", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
-				"uuid2", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(2), fileEntry.getFileEntryId(),
-				"uuid1", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(3), fileEntry.getFileEntryId(),
-				"uuid3", fileEntry.getTitle());
-
-			_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(1), 200, 50);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(2), 280, 200);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(3), 330, 280);
-		}
+		_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(1), 200, 50);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(2), 280, 200);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(3), 330, 280);
 	}
 
 	@Test
 	public void testHDMediaQueryAppliesWhenHeightHas1PXLessThanExpected()
 		throws Exception {
 
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		_addTestVariant("small", "uuid0", 50, 50);
+		_addTestVariant("small.hd", "uuid1", 99, 100);
 
-			_addTestVariant("small", "uuid0", 50, 50);
-			_addTestVariant("small.hd", "uuid1", 99, 100);
+		String value = _resolver.getValue(fileEntry, null);
 
-			String value = _resolver.getValue(fileEntry, null);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
+		String defaultSource = jsonObject.getString("defaultSource");
 
-			String defaultSource = jsonObject.getString("defaultSource");
+		Assert.assertEquals(
+			DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
+			defaultSource);
 
-			Assert.assertEquals(
-				DLUtil.getPreviewURL(
-					fileEntry, fileEntry.getFileVersion(), null,
-					StringPool.BLANK, false, false),
-				defaultSource);
+		JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
 
-			JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
+		Assert.assertEquals(2, sourcesJSONArray.length());
 
-			Assert.assertEquals(2, sourcesJSONArray.length());
+		_assertHDSrcSource(
+			sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
+			"uuid0", "uuid1", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
+			"uuid1", fileEntry.getTitle());
 
-			_assertHDSrcSource(
-				sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
-				"uuid0", "uuid1", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
-				"uuid1", fileEntry.getTitle());
-
-			_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(1), 100, 50);
-		}
+		_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(1), 100, 50);
 	}
 
 	@Test
 	public void testHDMediaQueryAppliesWhenHeightHas1PXMoreThanExpected()
 		throws Exception {
 
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		_addTestVariant("small", "uuid0", 50, 50);
+		_addTestVariant("small.hd", "uuid1", 101, 100);
 
-			_addTestVariant("small", "uuid0", 50, 50);
-			_addTestVariant("small.hd", "uuid1", 101, 100);
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		String value = _resolver.getValue(fileEntry, null);
 
-			String value = _resolver.getValue(fileEntry, null);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
+		String defaultSource = jsonObject.getString("defaultSource");
 
-			String defaultSource = jsonObject.getString("defaultSource");
+		Assert.assertEquals(
+			DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
+			defaultSource);
 
-			Assert.assertEquals(
-				DLUtil.getPreviewURL(
-					fileEntry, fileEntry.getFileVersion(), null,
-					StringPool.BLANK, false, false),
-				defaultSource);
+		JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
 
-			JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
+		Assert.assertEquals(2, sourcesJSONArray.length());
 
-			Assert.assertEquals(2, sourcesJSONArray.length());
+		_assertHDSrcSource(
+			sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
+			"uuid0", "uuid1", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
+			"uuid1", fileEntry.getTitle());
 
-			_assertHDSrcSource(
-				sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
-				"uuid0", "uuid1", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
-				"uuid1", fileEntry.getTitle());
-
-			_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(1), 100, 50);
-		}
+		_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(1), 100, 50);
 	}
 
 	@Test
 	public void testHDMediaQueryAppliesWhenWidthHas1PXLessThanExpected()
 		throws Exception {
 
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		_addTestVariant("small", "uuid0", 50, 50);
+		_addTestVariant("small.hd", "uuid1", 100, 99);
 
-			_addTestVariant("small", "uuid0", 50, 50);
-			_addTestVariant("small.hd", "uuid1", 100, 99);
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		String value = _resolver.getValue(fileEntry, null);
 
-			String value = _resolver.getValue(fileEntry, null);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
+		String defaultSource = jsonObject.getString("defaultSource");
 
-			String defaultSource = jsonObject.getString("defaultSource");
+		Assert.assertEquals(
+			DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
+			defaultSource);
 
-			Assert.assertEquals(
-				DLUtil.getPreviewURL(
-					fileEntry, fileEntry.getFileVersion(), null,
-					StringPool.BLANK, false, false),
-				defaultSource);
+		JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
 
-			JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
+		Assert.assertEquals(2, sourcesJSONArray.length());
 
-			Assert.assertEquals(2, sourcesJSONArray.length());
+		_assertHDSrcSource(
+			sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
+			"uuid0", "uuid1", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
+			"uuid1", fileEntry.getTitle());
 
-			_assertHDSrcSource(
-				sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
-				"uuid0", "uuid1", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
-				"uuid1", fileEntry.getTitle());
-
-			_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(1), 99, 50);
-		}
+		_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(1), 99, 50);
 	}
 
 	@Test
 	public void testHDMediaQueryAppliesWhenWidthHas1PXMoreThanExpected()
 		throws Exception {
 
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		_addTestVariant("small", "uuid0", 50, 50);
+		_addTestVariant("small.hd", "uuid1", 100, 101);
 
-			_addTestVariant("small", "uuid0", 50, 50);
-			_addTestVariant("small.hd", "uuid1", 100, 101);
+		String value = _resolver.getValue(fileEntry, null);
 
-			String value = _resolver.getValue(fileEntry, null);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
+		String defaultSource = jsonObject.getString("defaultSource");
 
-			String defaultSource = jsonObject.getString("defaultSource");
+		Assert.assertEquals(
+			DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
+			defaultSource);
 
-			Assert.assertEquals(
-				DLUtil.getPreviewURL(
-					fileEntry, fileEntry.getFileVersion(), null,
-					StringPool.BLANK, false, false),
-				defaultSource);
+		JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
 
-			JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
+		Assert.assertEquals(2, sourcesJSONArray.length());
 
-			Assert.assertEquals(2, sourcesJSONArray.length());
+		_assertHDSrcSource(
+			sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
+			"uuid0", "uuid1", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
+			"uuid1", fileEntry.getTitle());
 
-			_assertHDSrcSource(
-				sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
-				"uuid0", "uuid1", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
-				"uuid1", fileEntry.getTitle());
-
-			_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(1), 101, 50);
-		}
+		_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(1), 101, 50);
 	}
 
 	@Test
 	public void testHDMediaQueryNotAppliesWhenHeightHas2PXLessThanExpected()
 		throws Exception {
 
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		_addTestVariant("small", "uuid0", 50, 50);
+		_addTestVariant("small.hd", "uuid1", 98, 200);
 
-			_addTestVariant("small", "uuid0", 50, 50);
-			_addTestVariant("small.hd", "uuid1", 98, 200);
+		String value = _resolver.getValue(fileEntry, null);
 
-			String value = _resolver.getValue(fileEntry, null);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
+		String defaultSource = jsonObject.getString("defaultSource");
 
-			String defaultSource = jsonObject.getString("defaultSource");
+		Assert.assertEquals(
+			DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
+			defaultSource);
 
-			Assert.assertEquals(
-				DLUtil.getPreviewURL(
-					fileEntry, fileEntry.getFileVersion(), null,
-					StringPool.BLANK, false, false),
-				defaultSource);
+		JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
 
-			JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
+		Assert.assertEquals(2, sourcesJSONArray.length());
 
-			Assert.assertEquals(2, sourcesJSONArray.length());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
+			"uuid0", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
+			"uuid1", fileEntry.getTitle());
 
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
-				"uuid0", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
-				"uuid1", fileEntry.getTitle());
-
-			_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(1), 200, 50);
-		}
+		_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(1), 200, 50);
 	}
 
 	@Test
 	public void testHDMediaQueryNotAppliesWhenHeightHas2PXMoreThanExpected()
 		throws Exception {
 
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		_addTestVariant("small", "uuid0", 50, 50);
+		_addTestVariant("small.hd", "uuid1", 102, 200);
 
-			_addTestVariant("small", "uuid0", 50, 50);
-			_addTestVariant("small.hd", "uuid1", 102, 200);
+		String value = _resolver.getValue(fileEntry, null);
 
-			String value = _resolver.getValue(fileEntry, null);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
+		String defaultSource = jsonObject.getString("defaultSource");
 
-			String defaultSource = jsonObject.getString("defaultSource");
+		Assert.assertEquals(
+			DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
+			defaultSource);
 
-			Assert.assertEquals(
-				DLUtil.getPreviewURL(
-					fileEntry, fileEntry.getFileVersion(), null,
-					StringPool.BLANK, false, false),
-				defaultSource);
+		JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
 
-			JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
+		Assert.assertEquals(2, sourcesJSONArray.length());
 
-			Assert.assertEquals(2, sourcesJSONArray.length());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
+			"uuid0", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
+			"uuid1", fileEntry.getTitle());
 
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
-				"uuid0", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
-				"uuid1", fileEntry.getTitle());
-
-			_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(1), 200, 50);
-		}
+		_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(1), 200, 50);
 	}
 
 	@Test
 	public void testHDMediaQueryNotAppliesWhenWidthHas2PXLessThanExpected()
 		throws Exception {
 
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		_addTestVariant("small", "uuid0", 50, 50);
+		_addTestVariant("small.hd", "uuid1", 200, 98);
 
-			_addTestVariant("small", "uuid0", 50, 50);
-			_addTestVariant("small.hd", "uuid1", 200, 98);
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		String value = _resolver.getValue(fileEntry, null);
 
-			String value = _resolver.getValue(fileEntry, null);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
+		String defaultSource = jsonObject.getString("defaultSource");
 
-			String defaultSource = jsonObject.getString("defaultSource");
+		Assert.assertEquals(
+			DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
+			defaultSource);
 
-			Assert.assertEquals(
-				DLUtil.getPreviewURL(
-					fileEntry, fileEntry.getFileVersion(), null,
-					StringPool.BLANK, false, false),
-				defaultSource);
+		JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
 
-			JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
+		Assert.assertEquals(2, sourcesJSONArray.length());
 
-			Assert.assertEquals(2, sourcesJSONArray.length());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
+			"uuid0", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
+			"uuid1", fileEntry.getTitle());
 
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
-				"uuid0", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
-				"uuid1", fileEntry.getTitle());
-
-			_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(1), 98, 50);
-		}
+		_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(1), 98, 50);
 	}
 
 	@Test
 	public void testHDMediaQueryNotAppliesWhenWidthHas2PXMoreThanExpected()
 		throws Exception {
 
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		_addTestVariant("small", "uuid0", 50, 50);
+		_addTestVariant("small.hd", "uuid1", 200, 102);
 
-			_addTestVariant("small", "uuid0", 50, 50);
-			_addTestVariant("small.hd", "uuid1", 200, 102);
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		String value = _resolver.getValue(fileEntry, null);
 
-			String value = _resolver.getValue(fileEntry, null);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
+		String defaultSource = jsonObject.getString("defaultSource");
 
-			String defaultSource = jsonObject.getString("defaultSource");
+		Assert.assertEquals(
+			DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
+			defaultSource);
 
-			Assert.assertEquals(
-				DLUtil.getPreviewURL(
-					fileEntry, fileEntry.getFileVersion(), null,
-					StringPool.BLANK, false, false),
-				defaultSource);
+		JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
 
-			JSONArray sourcesJSONArray = jsonObject.getJSONArray("sources");
+		Assert.assertEquals(2, sourcesJSONArray.length());
 
-			Assert.assertEquals(2, sourcesJSONArray.length());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
+			"uuid0", fileEntry.getTitle());
+		_assertSrcSource(
+			sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
+			"uuid1", fileEntry.getTitle());
 
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(0), fileEntry.getFileEntryId(),
-				"uuid0", fileEntry.getTitle());
-			_assertSrcSource(
-				sourcesJSONArray.getJSONObject(1), fileEntry.getFileEntryId(),
-				"uuid1", fileEntry.getTitle());
-
-			_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
-			_assertAttibutes(sourcesJSONArray.getJSONObject(1), 102, 50);
-		}
+		_assertAttibutes(sourcesJSONArray.getJSONObject(0), 50, 0);
+		_assertAttibutes(sourcesJSONArray.getJSONObject(1), 102, 50);
 	}
 
 	public class DestinationReplacer implements AutoCloseable {

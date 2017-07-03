@@ -171,8 +171,7 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 	@Test
 	public void testCleanUpDeletesImageThumbnails() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR,
-				_ADAPTIVE_MEDIA_PROCESSOR)) {
+				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR)) {
 
 			int count = _getThumbnailCount();
 
@@ -189,8 +188,7 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 	@Test
 	public void testCleanUpDeletesOnlyImageThumbnails() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR,
-				_ADAPTIVE_MEDIA_PROCESSOR)) {
+				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR)) {
 
 			int count = _getThumbnailCount();
 
@@ -208,8 +206,7 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 	@Test
 	public void testMigrateDoesNotRemoveThumbnails() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR,
-				_ADAPTIVE_MEDIA_PROCESSOR)) {
+				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR)) {
 
 			int count = _getThumbnailCount();
 
@@ -227,8 +224,7 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 	@Test
 	public void testMigrateOnlyProcessesImages() throws Exception {
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR,
-				_ADAPTIVE_MEDIA_PROCESSOR);
+				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR);
 			PropsValuesReplacer propsValuesReplacer1 = new PropsValuesReplacer(
 				"DL_FILE_ENTRY_THUMBNAIL_CUSTOM_1_MAX_HEIGHT", 100);
 			PropsValuesReplacer propsValuesReplacer2 = new PropsValuesReplacer(
@@ -249,8 +245,7 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 		throws Exception {
 
 		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR,
-				_ADAPTIVE_MEDIA_PROCESSOR);
+				DestinationNames.DOCUMENT_LIBRARY_IMAGE_PROCESSOR);
 			PropsValuesReplacer propsValuesReplacer1 = new PropsValuesReplacer(
 				"DL_FILE_ENTRY_THUMBNAIL_MAX_HEIGHT", 999);
 			PropsValuesReplacer propsValuesReplacer2 = new PropsValuesReplacer(
@@ -428,9 +423,6 @@ public class AdaptiveMediaThumbnailsOSGiCommandsTest {
 			service,
 			(Object)new String[] {String.valueOf(_company.getCompanyId())});
 	}
-
-	private static final String _ADAPTIVE_MEDIA_PROCESSOR =
-		"liferay/adaptive_media_processor";
 
 	private static final String _BUNDLE_SYMBOLIC_NAME =
 		"com.liferay.adaptive.media.document.library";

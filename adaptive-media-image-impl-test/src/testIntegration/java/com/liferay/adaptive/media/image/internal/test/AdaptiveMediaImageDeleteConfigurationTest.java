@@ -17,7 +17,6 @@ package com.liferay.adaptive.media.image.internal.test;
 import com.liferay.adaptive.media.exception.AdaptiveMediaImageConfigurationException.InvalidStateAdaptiveMediaImageConfigurationException;
 import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigurationEntry;
 import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigurationHelper;
-import com.liferay.adaptive.media.image.internal.test.util.DestinationReplacer;
 import com.liferay.adaptive.media.image.service.AdaptiveMediaImageEntryLocalServiceUtil;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
@@ -201,50 +200,43 @@ public class AdaptiveMediaImageDeleteConfigurationTest
 
 	@Test
 	public void testDeleteConfigurationEntryWithImages() throws Exception {
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		AdaptiveMediaImageConfigurationHelper
+			adaptiveMediaImageConfigurationHelper = serviceTracker.getService();
 
-			AdaptiveMediaImageConfigurationHelper
-				adaptiveMediaImageConfigurationHelper =
-					serviceTracker.getService();
+		Map<String, String> properties = new HashMap<>();
 
-			Map<String, String> properties = new HashMap<>();
+		properties.put("max-height", "100");
+		properties.put("max-width", "100");
 
-			properties.put("max-height", "100");
-			properties.put("max-width", "100");
-
-			AdaptiveMediaImageConfigurationEntry configurationEntry =
-				adaptiveMediaImageConfigurationHelper.
-					addAdaptiveMediaImageConfigurationEntry(
-						TestPropsValues.getCompanyId(), "one", "desc", "1",
-						properties);
-
-			FileEntry fileEntry = _addFileEntry();
-
-			FileVersion fileVersion = fileEntry.getFileVersion();
-
-			Assert.assertNotNull(
-				AdaptiveMediaImageEntryLocalServiceUtil.
-					fetchAdaptiveMediaImageEntry(
-						configurationEntry.getUUID(),
-						fileVersion.getFileVersionId()));
-
+		AdaptiveMediaImageConfigurationEntry configurationEntry =
 			adaptiveMediaImageConfigurationHelper.
-				disableAdaptiveMediaImageConfigurationEntry(
-					TestPropsValues.getCompanyId(),
-					configurationEntry.getUUID());
+				addAdaptiveMediaImageConfigurationEntry(
+					TestPropsValues.getCompanyId(), "one", "desc", "1",
+					properties);
 
-			adaptiveMediaImageConfigurationHelper.
-				deleteAdaptiveMediaImageConfigurationEntry(
-					TestPropsValues.getCompanyId(),
-					configurationEntry.getUUID());
+		FileEntry fileEntry = _addFileEntry();
 
-			Assert.assertNull(
-				AdaptiveMediaImageEntryLocalServiceUtil.
-					fetchAdaptiveMediaImageEntry(
-						configurationEntry.getUUID(),
-						fileVersion.getFileVersionId()));
-		}
+		FileVersion fileVersion = fileEntry.getFileVersion();
+
+		Assert.assertNotNull(
+			AdaptiveMediaImageEntryLocalServiceUtil.
+				fetchAdaptiveMediaImageEntry(
+					configurationEntry.getUUID(),
+					fileVersion.getFileVersionId()));
+
+		adaptiveMediaImageConfigurationHelper.
+			disableAdaptiveMediaImageConfigurationEntry(
+				TestPropsValues.getCompanyId(), configurationEntry.getUUID());
+
+		adaptiveMediaImageConfigurationHelper.
+			deleteAdaptiveMediaImageConfigurationEntry(
+				TestPropsValues.getCompanyId(), configurationEntry.getUUID());
+
+		Assert.assertNull(
+			AdaptiveMediaImageEntryLocalServiceUtil.
+				fetchAdaptiveMediaImageEntry(
+					configurationEntry.getUUID(),
+					fileVersion.getFileVersionId()));
 	}
 
 	@Test
@@ -606,45 +598,39 @@ public class AdaptiveMediaImageDeleteConfigurationTest
 
 	@Test
 	public void testForceDeleteConfigurationEntryWithImages() throws Exception {
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		AdaptiveMediaImageConfigurationHelper
+			adaptiveMediaImageConfigurationHelper = serviceTracker.getService();
 
-			AdaptiveMediaImageConfigurationHelper
-				adaptiveMediaImageConfigurationHelper =
-					serviceTracker.getService();
+		Map<String, String> properties = new HashMap<>();
 
-			Map<String, String> properties = new HashMap<>();
+		properties.put("max-height", "100");
+		properties.put("max-width", "100");
 
-			properties.put("max-height", "100");
-			properties.put("max-width", "100");
-
-			AdaptiveMediaImageConfigurationEntry configurationEntry =
-				adaptiveMediaImageConfigurationHelper.
-					addAdaptiveMediaImageConfigurationEntry(
-						TestPropsValues.getCompanyId(), "one", "desc", "1",
-						properties);
-
-			FileEntry fileEntry = _addFileEntry();
-
-			FileVersion fileVersion = fileEntry.getFileVersion();
-
-			Assert.assertNotNull(
-				AdaptiveMediaImageEntryLocalServiceUtil.
-					fetchAdaptiveMediaImageEntry(
-						configurationEntry.getUUID(),
-						fileVersion.getFileVersionId()));
-
+		AdaptiveMediaImageConfigurationEntry configurationEntry =
 			adaptiveMediaImageConfigurationHelper.
-				forceDeleteAdaptiveMediaImageConfigurationEntry(
-					TestPropsValues.getCompanyId(),
-					configurationEntry.getUUID());
+				addAdaptiveMediaImageConfigurationEntry(
+					TestPropsValues.getCompanyId(), "one", "desc", "1",
+					properties);
 
-			Assert.assertNull(
-				AdaptiveMediaImageEntryLocalServiceUtil.
-					fetchAdaptiveMediaImageEntry(
-						configurationEntry.getUUID(),
-						fileVersion.getFileVersionId()));
-		}
+		FileEntry fileEntry = _addFileEntry();
+
+		FileVersion fileVersion = fileEntry.getFileVersion();
+
+		Assert.assertNotNull(
+			AdaptiveMediaImageEntryLocalServiceUtil.
+				fetchAdaptiveMediaImageEntry(
+					configurationEntry.getUUID(),
+					fileVersion.getFileVersionId()));
+
+		adaptiveMediaImageConfigurationHelper.
+			forceDeleteAdaptiveMediaImageConfigurationEntry(
+				TestPropsValues.getCompanyId(), configurationEntry.getUUID());
+
+		Assert.assertNull(
+			AdaptiveMediaImageEntryLocalServiceUtil.
+				fetchAdaptiveMediaImageEntry(
+					configurationEntry.getUUID(),
+					fileVersion.getFileVersionId()));
 	}
 
 	@Test

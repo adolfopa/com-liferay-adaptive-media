@@ -82,30 +82,26 @@ public class
 
 	@Test
 	public void testAddingFileEntryWithImageCreatesMedia() throws Exception {
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		String value = _resolver.getValue(fileEntry, null);
 
-			String value = _resolver.getValue(fileEntry, null);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
+		String url = jsonObject.getString("url");
+		long fileEntryId = jsonObject.getLong("fileEntryId");
 
-			String url = jsonObject.getString("url");
-			long fileEntryId = jsonObject.getLong("fileEntryId");
+		Assert.assertEquals(
+			DLUtil.getPreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
+			url);
 
-			Assert.assertEquals(
-				DLUtil.getPreviewURL(
-					fileEntry, fileEntry.getFileVersion(), null,
-					StringPool.BLANK, false, false),
-				url);
-
-			Assert.assertEquals(fileEntry.getFileEntryId(), fileEntryId);
-		}
+		Assert.assertEquals(fileEntry.getFileEntryId(), fileEntryId);
 	}
 
 	public class DestinationReplacer implements AutoCloseable {
