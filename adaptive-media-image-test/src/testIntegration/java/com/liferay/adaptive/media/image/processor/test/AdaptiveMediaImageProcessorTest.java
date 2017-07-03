@@ -19,7 +19,6 @@ import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigur
 import com.liferay.adaptive.media.image.configuration.AdaptiveMediaImageConfigurationHelper;
 import com.liferay.adaptive.media.image.finder.AdaptiveMediaImageFinder;
 import com.liferay.adaptive.media.image.processor.AdaptiveMediaImageProcessor;
-import com.liferay.adaptive.media.image.test.util.DestinationReplacer;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
@@ -117,122 +116,96 @@ public class AdaptiveMediaImageProcessorTest {
 					configurationEntry.getUUID());
 		}
 
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		FileEntry fileEntry = _addNonImageFileEntry(serviceContext);
 
-			FileEntry fileEntry = _addNonImageFileEntry(serviceContext);
+		Stream<AdaptiveMedia<AdaptiveMediaImageProcessor>> adaptiveMediaStream =
+			_adaptiveMediaImageFinder.getAdaptiveMediaStream(
+				queryBuilder -> queryBuilder.allForFileEntry(
+					fileEntry
+				).done());
 
-			Stream<AdaptiveMedia<AdaptiveMediaImageProcessor>>
-				adaptiveMediaStream =
-					_adaptiveMediaImageFinder.getAdaptiveMediaStream(
-						queryBuilder -> queryBuilder.allForFileEntry(
-							fileEntry
-						).done());
-
-			Assert.assertEquals(0, adaptiveMediaStream.count());
-		}
+		Assert.assertEquals(0, adaptiveMediaStream.count());
 	}
 
 	@Ignore
 	@Test
 	public void testAddingFileEntryWithImageCreatesMedia() throws Exception {
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		Stream<AdaptiveMedia<AdaptiveMediaImageProcessor>> adaptiveMediaStream =
+			_adaptiveMediaImageFinder.getAdaptiveMediaStream(
+				queryBuilder -> queryBuilder.allForFileEntry(
+					fileEntry
+				).done());
 
-			Stream<AdaptiveMedia<AdaptiveMediaImageProcessor>>
-				adaptiveMediaStream =
-					_adaptiveMediaImageFinder.getAdaptiveMediaStream(
-						queryBuilder -> queryBuilder.allForFileEntry(
-							fileEntry
-						).done());
-
-			Assert.assertEquals(
-				_getVariantsCount(), adaptiveMediaStream.count());
-		}
+		Assert.assertEquals(_getVariantsCount(), adaptiveMediaStream.count());
 	}
 
 	@Test
 	public void testAddingFileEntryWithNoImageCreatesNoMedia()
 		throws Exception {
 
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		FileEntry fileEntry = _addNonImageFileEntry(serviceContext);
 
-			FileEntry fileEntry = _addNonImageFileEntry(serviceContext);
+		Stream<AdaptiveMedia<AdaptiveMediaImageProcessor>> adaptiveMediaStream =
+			_adaptiveMediaImageFinder.getAdaptiveMediaStream(
+				queryBuilder -> queryBuilder.allForFileEntry(
+					fileEntry
+				).done());
 
-			Stream<AdaptiveMedia<AdaptiveMediaImageProcessor>>
-				adaptiveMediaStream =
-					_adaptiveMediaImageFinder.getAdaptiveMediaStream(
-						queryBuilder -> queryBuilder.allForFileEntry(
-							fileEntry
-						).done());
-
-			Assert.assertEquals(0, adaptiveMediaStream.count());
-		}
+		Assert.assertEquals(0, adaptiveMediaStream.count());
 	}
 
 	@Test
 	public void testCleaningFileEntryWithImageRemovesMedia() throws Exception {
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addImageFileEntry(serviceContext);
+		_adaptiveMediaImageProcessor.cleanUp(
+			fileEntry.getLatestFileVersion(true));
 
-			_adaptiveMediaImageProcessor.cleanUp(
-				fileEntry.getLatestFileVersion(true));
+		Stream<AdaptiveMedia<AdaptiveMediaImageProcessor>> adaptiveMediaStream =
+			_adaptiveMediaImageFinder.getAdaptiveMediaStream(
+				queryBuilder -> queryBuilder.allForFileEntry(
+					fileEntry
+				).done());
 
-			Stream<AdaptiveMedia<AdaptiveMediaImageProcessor>>
-				adaptiveMediaStream =
-					_adaptiveMediaImageFinder.getAdaptiveMediaStream(
-						queryBuilder -> queryBuilder.allForFileEntry(
-							fileEntry
-						).done());
-
-			Assert.assertEquals(0, adaptiveMediaStream.count());
-		}
+		Assert.assertEquals(0, adaptiveMediaStream.count());
 	}
 
 	@Test
 	public void testCleaningFileEntryWithNoImageDoesNothing() throws Exception {
-		try (DestinationReplacer destinationReplacer = new DestinationReplacer(
-				"liferay/adaptive_media_processor")) {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group, TestPropsValues.getUserId());
 
-			ServiceContext serviceContext =
-				ServiceContextTestUtil.getServiceContext(
-					_group, TestPropsValues.getUserId());
+		final FileEntry fileEntry = _addNonImageFileEntry(serviceContext);
 
-			final FileEntry fileEntry = _addNonImageFileEntry(serviceContext);
+		_adaptiveMediaImageProcessor.cleanUp(
+			fileEntry.getLatestFileVersion(true));
 
-			_adaptiveMediaImageProcessor.cleanUp(
-				fileEntry.getLatestFileVersion(true));
+		Stream<AdaptiveMedia<AdaptiveMediaImageProcessor>> adaptiveMediaStream =
+			_adaptiveMediaImageFinder.getAdaptiveMediaStream(
+				queryBuilder -> queryBuilder.allForFileEntry(
+					fileEntry
+				).done());
 
-			Stream<AdaptiveMedia<AdaptiveMediaImageProcessor>>
-				adaptiveMediaStream =
-					_adaptiveMediaImageFinder.getAdaptiveMediaStream(
-						queryBuilder -> queryBuilder.allForFileEntry(
-							fileEntry
-						).done());
-
-			Assert.assertEquals(0, adaptiveMediaStream.count());
-		}
+		Assert.assertEquals(0, adaptiveMediaStream.count());
 	}
 
 	private FileEntry _addImageFileEntry(ServiceContext serviceContext)
