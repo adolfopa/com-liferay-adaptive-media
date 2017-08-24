@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.adaptive.media.image.messaging;
+package com.liferay.adaptive.media.image.constants;
 
 /**
  * @author Alejandro Tardín
