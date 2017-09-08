@@ -16,14 +16,13 @@ package com.liferay.adaptive.media.document.library.web.internal.counter;
 
 import com.liferay.adaptive.media.image.constants.AMImageConstants;
 import com.liferay.adaptive.media.image.counter.AMImageCounter;
-import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
+import com.liferay.document.library.kernel.service.DLFileVersionLocalService;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
-import com.liferay.portal.kernel.service.ClassNameLocalService;
-import com.liferay.trash.kernel.service.TrashEntryLocalService;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -39,25 +38,15 @@ public class DLAMImageCounter implements AMImageCounter {
 
 	@Override
 	public int countExpectedAMImageEntries(long companyId) {
-		DynamicQuery trashEntryDynamicQuery =
-			_trashEntryLocalService.dynamicQuery();
+		return _getFileEntriesCount(companyId) -
+			_getTrashedFileEntriesCount(companyId);
+	}
 
-		trashEntryDynamicQuery.setProjection(
-			ProjectionFactoryUtil.property("classPK"));
-
-		Property companyIdProperty = PropertyFactoryUtil.forName("companyId");
-
-		trashEntryDynamicQuery.add(companyIdProperty.eq(companyId));
-
-		Property classNameIdProperty = PropertyFactoryUtil.forName(
-			"classNameId");
-
-		trashEntryDynamicQuery.add(
-			classNameIdProperty.eq(
-				_classNameLocalService.getClassNameId(DLFileEntry.class)));
-
+	private int _getFileEntriesCount(long companyId) {
 		DynamicQuery dlFileEntryEntryDynamicQuery =
 			_dlFileEntryLocalService.dynamicQuery();
+
+		Property companyIdProperty = PropertyFactoryUtil.forName("companyId");
 
 		dlFileEntryEntryDynamicQuery.add(companyIdProperty.eq(companyId));
 
@@ -73,23 +62,46 @@ public class DLAMImageCounter implements AMImageCounter {
 		dlFileEntryEntryDynamicQuery.add(
 			mimeTypeProperty.in(AMImageConstants.getSupportedMimeTypes()));
 
-		Property fileEntryIdProperty = PropertyFactoryUtil.forName(
-			"fileEntryId");
-
-		dlFileEntryEntryDynamicQuery.add(
-			fileEntryIdProperty.notIn(trashEntryDynamicQuery));
-
 		return (int)_dlFileEntryLocalService.dynamicQueryCount(
 			dlFileEntryEntryDynamicQuery);
 	}
 
-	@Reference
-	private ClassNameLocalService _classNameLocalService;
+	private int _getTrashedFileEntriesCount(long companyId) {
+		DynamicQuery dlFileVersionDynamicQuery =
+			_dlFileVersionLocalService.dynamicQuery();
+
+		dlFileVersionDynamicQuery.setProjection(
+			ProjectionFactoryUtil.countDistinct("fileEntryId"));
+
+		Property companyIdProperty = PropertyFactoryUtil.forName("companyId");
+
+		dlFileVersionDynamicQuery.add(companyIdProperty.eq(companyId));
+
+		Property groupIdProperty = PropertyFactoryUtil.forName("groupId");
+		Property repositoryIdProperty = PropertyFactoryUtil.forName(
+			"repositoryId");
+
+		dlFileVersionDynamicQuery.add(
+			groupIdProperty.eqProperty(repositoryIdProperty));
+
+		Property mimeTypeProperty = PropertyFactoryUtil.forName("mimeType");
+
+		dlFileVersionDynamicQuery.add(
+			mimeTypeProperty.in(AMImageConstants.getSupportedMimeTypes()));
+
+		Property statusProperty = PropertyFactoryUtil.forName("status");
+
+		dlFileVersionDynamicQuery.add(
+			statusProperty.eq(WorkflowConstants.STATUS_IN_TRASH));
+
+		return (int)_dlFileEntryLocalService.dynamicQueryCount(
+			dlFileVersionDynamicQuery);
+	}
 
 	@Reference
 	private DLFileEntryLocalService _dlFileEntryLocalService;
 
 	@Reference
-	private TrashEntryLocalService _trashEntryLocalService;
+	private DLFileVersionLocalService _dlFileVersionLocalService;
 
 }

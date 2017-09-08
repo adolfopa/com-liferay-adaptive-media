@@ -23,6 +23,7 @@ import com.liferay.adaptive.media.image.processor.AMImageProcessor;
 import com.liferay.adaptive.media.web.constants.OptimizeImagesBackgroundTaskConstants;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
+import com.liferay.document.library.kernel.service.DLFileVersionLocalService;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskConstants;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskStatusMessageSender;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskThreadLocal;
@@ -37,6 +38,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
 import com.liferay.trash.kernel.service.TrashEntryLocalService;
 
@@ -97,24 +99,8 @@ public class DLAMImageOptimizer implements AMImageOptimizer {
 
 				@Override
 				public void addCriteria(DynamicQuery dynamicQuery) {
-					DynamicQuery trashEntryDynamicQuery =
-						_trashEntryLocalService.dynamicQuery();
-
-					trashEntryDynamicQuery.setProjection(
-						ProjectionFactoryUtil.property("classPK"));
-
 					Property companyIdProperty = PropertyFactoryUtil.forName(
 						"companyId");
-
-					trashEntryDynamicQuery.add(companyIdProperty.eq(companyId));
-
-					Property classNameIdProperty = PropertyFactoryUtil.forName(
-						"classNameId");
-
-					trashEntryDynamicQuery.add(
-						classNameIdProperty.eq(
-							_classNameLocalService.getClassNameId(
-								DLFileEntry.class)));
 
 					dynamicQuery.add(companyIdProperty.eq(companyId));
 
@@ -133,11 +119,34 @@ public class DLAMImageOptimizer implements AMImageOptimizer {
 						mimeTypeProperty.in(
 							AMImageConstants.getSupportedMimeTypes()));
 
+					DynamicQuery dlFileVersionDynamicQuery =
+						_dlFileVersionLocalService.dynamicQuery();
+
+					dlFileVersionDynamicQuery.setProjection(
+						ProjectionFactoryUtil.distinct(
+							ProjectionFactoryUtil.property("fileEntryId")));
+
+					dlFileVersionDynamicQuery.add(
+						companyIdProperty.eq(companyId));
+
+					dlFileVersionDynamicQuery.add(
+						groupIdProperty.eqProperty(repositoryIdProperty));
+
+					dlFileVersionDynamicQuery.add(
+						mimeTypeProperty.in(
+							AMImageConstants.getSupportedMimeTypes()));
+
+					Property statusProperty = PropertyFactoryUtil.forName(
+						"status");
+
+					dlFileVersionDynamicQuery.add(
+						statusProperty.eq(WorkflowConstants.STATUS_IN_TRASH));
+
 					Property fileEntryIdProperty = PropertyFactoryUtil.forName(
 						"fileEntryId");
 
 					dynamicQuery.add(
-						fileEntryIdProperty.notIn(trashEntryDynamicQuery));
+						fileEntryIdProperty.notIn(dlFileVersionDynamicQuery));
 				}
 
 			});
@@ -217,6 +226,9 @@ public class DLAMImageOptimizer implements AMImageOptimizer {
 
 	@Reference
 	private DLFileEntryLocalService _dlFileEntryLocalService;
+
+	@Reference
+	private DLFileVersionLocalService _dlFileVersionLocalService;
 
 	@Reference
 	private TrashEntryLocalService _trashEntryLocalService;
