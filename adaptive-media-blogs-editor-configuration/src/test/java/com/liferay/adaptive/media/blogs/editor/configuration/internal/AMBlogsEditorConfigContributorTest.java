@@ -253,6 +253,34 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 	}
 
 	@Test
+	public void testImgIsNotAddedToAllowedContentIfAlreadyPresent()
+		throws Exception {
+
+		JSONObject originalJSONObject = JSONFactoryUtil.createJSONObject();
+
+		originalJSONObject.put(
+			"allowedContent", "a[*](*); div(*); img[*](*){*};");
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
+			originalJSONObject.toJSONString());
+
+		AMBlogsEditorConfigContributor amBlogsEditorConfigContributor =
+			new AMBlogsEditorConfigContributor();
+
+		amBlogsEditorConfigContributor.populateConfigJSONObject(
+			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
+			_requestBackedPortletURLFactory);
+
+		JSONObject expectedJSONObject = JSONFactoryUtil.createJSONObject();
+
+		expectedJSONObject.put(
+			"allowedContent", "a[*](*); div(*); img[*](*){*};");
+
+		JSONAssert.assertEquals(
+			expectedJSONObject.toJSONString(), jsonObject.toJSONString(), true);
+	}
+
+	@Test
 	public void testItemSelectorURLWhenNoFileBrowserImageBrowseLinkUrl()
 		throws Exception {
 
