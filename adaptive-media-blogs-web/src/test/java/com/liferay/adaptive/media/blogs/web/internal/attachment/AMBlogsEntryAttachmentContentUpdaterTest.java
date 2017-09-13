@@ -14,7 +14,7 @@
 
 package com.liferay.adaptive.media.blogs.web.internal.attachment;
 
-import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
+import com.liferay.portal.kernel.portletfilerepository.PortletFileRepository;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.StringPool;
@@ -22,31 +22,25 @@ import com.liferay.portal.kernel.util.StringPool;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * @author Alejandro Tardín
  */
-@PrepareForTest(PortletFileRepositoryUtil.class)
-@RunWith(PowerMockRunner.class)
 public class AMBlogsEntryAttachmentContentUpdaterTest {
 
 	@Before
 	public void setUp() {
-		MockitoAnnotations.initMocks(this);
+		_fileEntry = Mockito.mock(FileEntry.class);
 
-		PowerMockito.mockStatic(PortletFileRepositoryUtil.class);
+		_portletFileRepository = Mockito.mock(PortletFileRepository.class);
+
+		_amBlogsEntryAttachmentContentUpdater =
+			new AMBlogsEntryAttachmentContentUpdater(_portletFileRepository);
 
 		Mockito.when(
-			PortletFileRepositoryUtil.getPortletFileEntryURL(
+			_portletFileRepository.getPortletFileEntryURL(
 				Mockito.isNull(ThemeDisplay.class), Mockito.eq(_fileEntry),
 				Mockito.eq(StringPool.BLANK))
 		).thenReturn(
@@ -77,11 +71,9 @@ public class AMBlogsEntryAttachmentContentUpdaterTest {
 
 	private static final String _FILE_ENTRY_IMAGE_URL = "theUrl";
 
-	private final AMBlogsEntryAttachmentContentUpdater
-		_amBlogsEntryAttachmentContentUpdater =
-			new AMBlogsEntryAttachmentContentUpdater();
-
-	@Mock
+	private AMBlogsEntryAttachmentContentUpdater
+		_amBlogsEntryAttachmentContentUpdater;
 	private FileEntry _fileEntry;
+	private PortletFileRepository _portletFileRepository;
 
 }
