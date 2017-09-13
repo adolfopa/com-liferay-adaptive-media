@@ -25,21 +25,23 @@ import org.junit.Test;
 
 import org.mockito.Mockito;
 
+import org.powermock.api.mockito.PowerMockito;
+
 /**
  * @author Alejandro Tardín
  */
-public class AMBlogsEntryAttachmentContentUpdaterTest {
+public class AMBlogsEntryAttachmentContentUpdaterTest extends PowerMockito {
 
 	@Before
 	public void setUp() {
-		_fileEntry = Mockito.mock(FileEntry.class);
+		_fileEntry = mock(FileEntry.class);
 
-		_portletFileRepository = Mockito.mock(PortletFileRepository.class);
+		_portletFileRepository = mock(PortletFileRepository.class);
 
 		_amBlogsEntryAttachmentContentUpdater =
 			new AMBlogsEntryAttachmentContentUpdater(_portletFileRepository);
 
-		Mockito.when(
+		when(
 			_portletFileRepository.getPortletFileEntryURL(
 				Mockito.isNull(ThemeDisplay.class), Mockito.eq(_fileEntry),
 				Mockito.eq(StringPool.BLANK))
@@ -47,7 +49,7 @@ public class AMBlogsEntryAttachmentContentUpdaterTest {
 			_FILE_ENTRY_IMAGE_URL
 		);
 
-		Mockito.when(
+		when(
 			_fileEntry.getFileEntryId()
 		).thenReturn(
 			_FILE_ENTRY_IMAGE_ID

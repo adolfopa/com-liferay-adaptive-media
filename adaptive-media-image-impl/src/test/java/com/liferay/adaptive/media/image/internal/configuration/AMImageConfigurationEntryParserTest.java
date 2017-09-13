@@ -27,37 +27,39 @@ import org.junit.Test;
 
 import org.mockito.Mockito;
 
+import org.powermock.api.mockito.PowerMockito;
+
 /**
  * @author Adolfo Pérez
  */
-public class AMImageConfigurationEntryParserTest {
+public class AMImageConfigurationEntryParserTest extends PowerMockito {
 
 	@Before
 	public void setUp() {
-		_http = Mockito.mock(Http.class);
+		_http = mock(Http.class);
 
 		_amImageConfigurationEntryParser = new AMImageConfigurationEntryParser(
 			_http);
 
-		Mockito.when(
+		when(
 			_http.encodeURL(Mockito.eq("desc"))
 		).thenReturn(
 			"desc"
 		);
 
-		Mockito.when(
+		when(
 			_http.decodeURL(Mockito.eq("desc"))
 		).thenReturn(
 			"desc"
 		);
 
-		Mockito.when(
+		when(
 			_http.encodeURL(Mockito.eq("test"))
 		).thenReturn(
 			"test"
 		);
 
-		Mockito.when(
+		when(
 			_http.decodeURL(Mockito.eq("test"))
 		).thenReturn(
 			"test"
@@ -113,13 +115,13 @@ public class AMImageConfigurationEntryParserTest {
 
 	@Test
 	public void testEncodedDescription() {
-		Mockito.when(
+		when(
 			_http.encodeURL(Mockito.eq("desc:;"))
 		).thenReturn(
 			"desc%3A%3B"
 		);
 
-		Mockito.when(
+		when(
 			_http.decodeURL(Mockito.eq("desc%3A%3B"))
 		).thenReturn(
 			"desc:;"
@@ -144,13 +146,13 @@ public class AMImageConfigurationEntryParserTest {
 
 	@Test
 	public void testEncodedName() {
-		Mockito.when(
+		when(
 			_http.encodeURL(Mockito.eq("test:;"))
 		).thenReturn(
 			"test%3A%3B"
 		);
 
-		Mockito.when(
+		when(
 			_http.decodeURL(Mockito.eq("test%3A%3B"))
 		).thenReturn(
 			"test:;"
