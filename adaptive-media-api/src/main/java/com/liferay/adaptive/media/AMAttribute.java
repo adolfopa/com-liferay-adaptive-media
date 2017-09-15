@@ -96,7 +96,7 @@ public final class AMAttribute<T, V> {
 	 *        attribute
 	 * @param converter a function that can convert a <code>String</code> to a
 	 *        value of the correct type; this function should throw an {@link
-	 *        AdaptiveMediaRuntimeException.AdaptiveMediaAttributeFormatException}
+	 *        com.liferay.adaptive.media.exception.AMRuntimeException.AMAttributeFormatException}
 	 *        if it cannot convert the String.
 	 * @param amDistanceComparator compares its two arguments for order considering the
 	 *        distance between their values; it should return a value between
