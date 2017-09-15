@@ -53,13 +53,13 @@ public class AMAttributeComparatorTest {
 	@Test
 	public void testSortDifferentMediaByMultipleAttributes() {
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia1 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 10,
+			AMAttribute.getContentLengthAMAttribute(), 10L,
 			AMAttribute.getFileNameAMAttribute(), "zzz");
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia2 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 10,
+			AMAttribute.getContentLengthAMAttribute(), 10L,
 			AMAttribute.getFileNameAMAttribute(), "aaa");
 
-		int result = _multiAMAttributeComparator.compare(
+		long result = _multiAMAttributeComparator.compare(
 			adaptiveMedia1, adaptiveMedia2);
 
 		Assert.assertEquals(-25, result);
@@ -68,13 +68,13 @@ public class AMAttributeComparatorTest {
 	@Test
 	public void testSortDifferentMediaByMultipleAttributesInverse() {
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia1 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 10,
+			AMAttribute.getContentLengthAMAttribute(), 10L,
 			AMAttribute.getFileNameAMAttribute(), "zzz");
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia2 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 10,
+			AMAttribute.getContentLengthAMAttribute(), 10L,
 			AMAttribute.getFileNameAMAttribute(), "aaa");
 
-		int result = _multiAMAttributeComparator.compare(
+		long result = _multiAMAttributeComparator.compare(
 			adaptiveMedia2, adaptiveMedia1);
 
 		Assert.assertEquals(25, result);
@@ -83,11 +83,11 @@ public class AMAttributeComparatorTest {
 	@Test
 	public void testSortDifferentMediaByOneAttribute() {
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia1 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 10);
+			AMAttribute.getContentLengthAMAttribute(), 10L);
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia2 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 20);
+			AMAttribute.getContentLengthAMAttribute(), 20L);
 
-		int result = _singleAMAttributeComparator.compare(
+		long result = _singleAMAttributeComparator.compare(
 			adaptiveMedia1, adaptiveMedia2);
 
 		Assert.assertEquals(-10, result);
@@ -96,11 +96,11 @@ public class AMAttributeComparatorTest {
 	@Test
 	public void testSortDifferentMediaByOneAttributeInverse() {
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia1 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 10);
+			AMAttribute.getContentLengthAMAttribute(), 10L);
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia2 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 20);
+			AMAttribute.getContentLengthAMAttribute(), 20L);
 
-		int result = _singleAMAttributeComparator.compare(
+		long result = _singleAMAttributeComparator.compare(
 			adaptiveMedia2, adaptiveMedia1);
 
 		Assert.assertEquals(10, result);
@@ -109,13 +109,13 @@ public class AMAttributeComparatorTest {
 	@Test
 	public void testSortEqualMediaByMultipleAttributes() {
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia1 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 10,
+			AMAttribute.getContentLengthAMAttribute(), 10L,
 			AMAttribute.getFileNameAMAttribute(), "aaa");
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia2 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 10,
+			AMAttribute.getContentLengthAMAttribute(), 10L,
 			AMAttribute.getFileNameAMAttribute(), "aaa");
 
-		int result = _singleAMAttributeComparator.compare(
+		long result = _singleAMAttributeComparator.compare(
 			adaptiveMedia1, adaptiveMedia2);
 
 		Assert.assertEquals(0, result);
@@ -124,11 +124,11 @@ public class AMAttributeComparatorTest {
 	@Test
 	public void testSortEqualMediaByOneAttribute() {
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia1 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 10);
+			AMAttribute.getContentLengthAMAttribute(), 10L);
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia2 = _createMedia(
-			AMAttribute.getContentLengthAMAttribute(), 10);
+			AMAttribute.getContentLengthAMAttribute(), 10L);
 
-		int result = _singleAMAttributeComparator.compare(
+		long result = _singleAMAttributeComparator.compare(
 			adaptiveMedia1, adaptiveMedia2);
 
 		Assert.assertEquals(0, result);

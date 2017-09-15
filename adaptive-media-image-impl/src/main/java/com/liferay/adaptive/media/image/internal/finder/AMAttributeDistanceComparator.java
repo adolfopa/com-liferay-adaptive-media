@@ -27,23 +27,25 @@ import java.util.Optional;
 /**
  * @author Sergio González
  */
-public class AMAttributeComparator
+public class AMAttributeDistanceComparator
 	implements AMDistanceComparator<AdaptiveMedia<AMImageProcessor>> {
 
-	public AMAttributeComparator(AMAttribute<AMImageProcessor, ?> amAttribute) {
+	public AMAttributeDistanceComparator(
+		AMAttribute<AMImageProcessor, ?> amAttribute) {
+
 		this(
 			Collections.singletonMap(
 				amAttribute, AMImageQueryBuilder.SortOrder.ASC));
 	}
 
-	public AMAttributeComparator(
+	public AMAttributeDistanceComparator(
 		AMAttribute<AMImageProcessor, ?> amAttribute,
 		AMImageQueryBuilder.SortOrder sortOrder) {
 
 		this(Collections.singletonMap(amAttribute, sortOrder));
 	}
 
-	public AMAttributeComparator(
+	public AMAttributeDistanceComparator(
 		Map
 			<AMAttribute<AMImageProcessor, ?>,
 				AMImageQueryBuilder.SortOrder> sortCriteria) {

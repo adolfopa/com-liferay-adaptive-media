@@ -99,8 +99,9 @@ public class AMImageFinderImpl implements AMImageFinder {
 		Predicate<AMImageConfigurationEntry> filter =
 			amImageQueryBuilderImpl.getConfigurationEntryFilter();
 
-		AMDistanceComparator<AdaptiveMedia<AMImageProcessor>> comparator =
-			amImageQueryBuilderImpl.getComparator();
+		AMDistanceComparator<AdaptiveMedia<AMImageProcessor>>
+			amDistanceComparator =
+				amImageQueryBuilderImpl.getAMDistanceComparator();
 
 		Stream<AMImageConfigurationEntry> amImageConfigurationEntryStream =
 			amImageConfigurationEntries.stream();
@@ -113,7 +114,7 @@ public class AMImageFinderImpl implements AMImageFinder {
 			amImageConfigurationEntry ->
 				_createMedia(fileVersion, uriFactory, amImageConfigurationEntry)
 		).sorted(
-			comparator.toComparator()
+			amDistanceComparator.toComparator()
 		);
 	}
 

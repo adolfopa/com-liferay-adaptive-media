@@ -110,7 +110,7 @@ public final class AMAttribute<T, V> {
 
 		_name = name;
 		_converterFunction = converter;
-		_comparator = amDistanceComparator;
+		_amDistanceComparator = amDistanceComparator;
 	}
 
 	/**
@@ -126,7 +126,7 @@ public final class AMAttribute<T, V> {
 	 * @review
 	 */
 	public long compare(V value1, V value2) {
-		return _comparator.compare(value1, value2);
+		return _amDistanceComparator.compare(value1, value2);
 	}
 
 	/**
@@ -149,7 +149,7 @@ public final class AMAttribute<T, V> {
 	 * @review
 	 */
 	public long distance(V value1, V value2) {
-		return Math.abs(_comparator.compare(value1, value2));
+		return Math.abs(_amDistanceComparator.compare(value1, value2));
 	}
 
 	/**
@@ -192,7 +192,7 @@ public final class AMAttribute<T, V> {
 			_AM_ATTRIBUTE_FILE_NAME.getName(), _AM_ATTRIBUTE_FILE_NAME);
 	}
 
-	private final AMDistanceComparator<V> _comparator;
+	private final AMDistanceComparator<V> _amDistanceComparator;
 	private final Function<String, V> _converterFunction;
 	private final String _name;
 

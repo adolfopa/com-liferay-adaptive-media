@@ -90,10 +90,10 @@ public class AMImageQueryBuilderImpl
 	}
 
 	public AMDistanceComparator<AdaptiveMedia<AMImageProcessor>>
-		getComparator() {
+		getAMDistanceComparator() {
 
 		if (!_sortCriteria.isEmpty()) {
-			return new AMAttributeComparator(_sortCriteria);
+			return new AMAttributeDistanceComparator(_sortCriteria);
 		}
 
 		if (!_amAttributes.isEmpty()) {
