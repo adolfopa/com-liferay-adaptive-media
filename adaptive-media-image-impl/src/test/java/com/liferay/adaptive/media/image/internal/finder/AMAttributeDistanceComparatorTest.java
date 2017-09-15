@@ -32,7 +32,7 @@ import org.junit.Test;
 /**
  * @author Adolfo Pérez
  */
-public class AMAttributeComparatorTest {
+public class AMAttributeDistanceComparatorTest {
 
 	@Before
 	public void setUp() {
@@ -47,7 +47,8 @@ public class AMAttributeComparatorTest {
 			AMAttribute.getFileNameAMAttribute(),
 			AMImageQueryBuilder.SortOrder.DESC);
 
-		_multiAMAttributeComparator = new AMAttributeComparator(amAttributes);
+		_multiAMAttributeDistanceComparator = new AMAttributeDistanceComparator(
+			amAttributes);
 	}
 
 	@Test
@@ -59,7 +60,7 @@ public class AMAttributeComparatorTest {
 			AMAttribute.getContentLengthAMAttribute(), 10L,
 			AMAttribute.getFileNameAMAttribute(), "aaa");
 
-		long result = _multiAMAttributeComparator.compare(
+		long result = _multiAMAttributeDistanceComparator.compare(
 			adaptiveMedia1, adaptiveMedia2);
 
 		Assert.assertEquals(-25, result);
@@ -74,7 +75,7 @@ public class AMAttributeComparatorTest {
 			AMAttribute.getContentLengthAMAttribute(), 10L,
 			AMAttribute.getFileNameAMAttribute(), "aaa");
 
-		long result = _multiAMAttributeComparator.compare(
+		long result = _multiAMAttributeDistanceComparator.compare(
 			adaptiveMedia2, adaptiveMedia1);
 
 		Assert.assertEquals(25, result);
@@ -87,7 +88,7 @@ public class AMAttributeComparatorTest {
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia2 = _createMedia(
 			AMAttribute.getContentLengthAMAttribute(), 20L);
 
-		long result = _singleAMAttributeComparator.compare(
+		long result = _singleAMAttributeDistanceComparator.compare(
 			adaptiveMedia1, adaptiveMedia2);
 
 		Assert.assertEquals(-10, result);
@@ -100,7 +101,7 @@ public class AMAttributeComparatorTest {
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia2 = _createMedia(
 			AMAttribute.getContentLengthAMAttribute(), 20L);
 
-		long result = _singleAMAttributeComparator.compare(
+		long result = _singleAMAttributeDistanceComparator.compare(
 			adaptiveMedia2, adaptiveMedia1);
 
 		Assert.assertEquals(10, result);
@@ -115,7 +116,7 @@ public class AMAttributeComparatorTest {
 			AMAttribute.getContentLengthAMAttribute(), 10L,
 			AMAttribute.getFileNameAMAttribute(), "aaa");
 
-		long result = _singleAMAttributeComparator.compare(
+		long result = _singleAMAttributeDistanceComparator.compare(
 			adaptiveMedia1, adaptiveMedia2);
 
 		Assert.assertEquals(0, result);
@@ -128,7 +129,7 @@ public class AMAttributeComparatorTest {
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia2 = _createMedia(
 			AMAttribute.getContentLengthAMAttribute(), 10L);
 
-		long result = _singleAMAttributeComparator.compare(
+		long result = _singleAMAttributeDistanceComparator.compare(
 			adaptiveMedia1, adaptiveMedia2);
 
 		Assert.assertEquals(0, result);
@@ -160,8 +161,10 @@ public class AMAttributeComparatorTest {
 		return new AMImage(() -> null, amImageAttributeMapping, null);
 	}
 
-	private AMAttributeComparator _multiAMAttributeComparator;
-	private final AMAttributeComparator _singleAMAttributeComparator =
-		new AMAttributeComparator(AMAttribute.getContentLengthAMAttribute());
+	private AMAttributeDistanceComparator _multiAMAttributeDistanceComparator;
+	private final AMAttributeDistanceComparator
+		_singleAMAttributeDistanceComparator =
+			new AMAttributeDistanceComparator(
+				AMAttribute.getContentLengthAMAttribute());
 
 }
