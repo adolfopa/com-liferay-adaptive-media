@@ -18,7 +18,6 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.adaptive.media.util.AMAttributeConverterUtil;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -112,29 +111,6 @@ public final class AMAttribute<T, V> {
 		_name = name;
 		_converterFunction = converter;
 		_comparator = amDistanceComparator;
-	}
-
-	/**
-	 * Creates a new attribute. All attributes live in the same global
-	 * namespace.
-	 *
-	 * @param name a human-readable value that uniquely identifies this
-	 *        attribute
-	 * @param converter a function that can convert a <code>String</code> to a
-	 *        value of the correct type; this function should throw an {@link
-	 *        AdaptiveMediaRuntimeException.AdaptiveMediaAttributeFormatException}
-	 *        if it cannot convert the String.
-	 * @param comparator compares its two arguments for order considering the
-	 *        distance between their values; it should return a value between
-	 *        {@link Integer#MIN_VALUE} and {@link Integer#MAX_VALUE} based on
-	 *        the distance of the values.
-	 */
-	public AMAttribute(
-		String name, Function<String, V> converter, Comparator<V> comparator) {
-
-		_name = name;
-		_converterFunction = converter;
-		_comparator = (v1, v2) -> (long)comparator.compare(v1, v2);
 	}
 
 	/**
