@@ -15,12 +15,12 @@
 package com.liferay.adaptive.media.image.internal.finder;
 
 import com.liferay.adaptive.media.AMAttribute;
+import com.liferay.adaptive.media.AMDistanceComparator;
 import com.liferay.adaptive.media.AdaptiveMedia;
 import com.liferay.adaptive.media.image.finder.AMImageQueryBuilder;
 import com.liferay.adaptive.media.image.processor.AMImageProcessor;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,7 +28,7 @@ import java.util.Optional;
  * @author Sergio González
  */
 public class AMAttributeComparator
-	implements Comparator<AdaptiveMedia<AMImageProcessor>> {
+	implements AMDistanceComparator<AdaptiveMedia<AMImageProcessor>> {
 
 	public AMAttributeComparator(AMAttribute<AMImageProcessor, ?> amAttribute) {
 		this(
@@ -52,7 +52,7 @@ public class AMAttributeComparator
 	}
 
 	@Override
-	public int compare(
+	public long compare(
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia1,
 		AdaptiveMedia<AMImageProcessor> adaptiveMedia2) {
 
@@ -69,16 +69,16 @@ public class AMAttributeComparator
 			Optional<?> value2Optional = adaptiveMedia2.getValueOptional(
 				amAttribute);
 
-			Optional<Integer> valueOptional = value1Optional.flatMap(
+			Optional<Long> valueOptional = value1Optional.flatMap(
 				value1 -> value2Optional.map(
 					value2 -> amAttribute.compare(value1, value2)));
 
 			AMImageQueryBuilder.SortOrder sortOrder = sortCriterion.getValue();
 
-			int result = valueOptional.map(
+			long result = valueOptional.map(
 				sortOrder::getSortValue
 			).orElse(
-				0
+				0L
 			);
 
 			if (result != 0) {
@@ -86,7 +86,7 @@ public class AMAttributeComparator
 			}
 		}
 
-		return 0;
+		return 0L;
 	}
 
 	private final Map

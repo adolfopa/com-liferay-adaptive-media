@@ -218,7 +218,7 @@ public class AMImageDLPluggableContentDataHandler
 				continue;
 			}
 
-			Optional<Integer> contentLengthOptional =
+			Optional<Long> contentLengthOptional =
 				adaptiveMedia.getValueOptional(
 					AMAttribute.getContentLengthAMAttribute());
 
@@ -246,10 +246,12 @@ public class AMImageDLPluggableContentDataHandler
 			}
 
 			try (InputStream inputStream = adaptiveMedia.getInputStream()) {
+				Long contentLength = contentLengthOptional.get();
+
 				_amImageEntryLocalService.addAMImageEntry(
 					amImageConfigurationEntry, fileVersion, widthOptional.get(),
 					heightOptional.get(), inputStream,
-					contentLengthOptional.get());
+					contentLength.intValue());
 			}
 		}
 	}

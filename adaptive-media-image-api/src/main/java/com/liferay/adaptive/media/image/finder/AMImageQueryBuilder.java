@@ -228,7 +228,7 @@ public interface AMImageQueryBuilder
 		ASC {
 
 			@Override
-			public int getSortValue(int value) {
+			public long getSortValue(long value) {
 				return value;
 			}
 
@@ -237,13 +237,13 @@ public interface AMImageQueryBuilder
 		DESC {
 
 			@Override
-			public int getSortValue(int value) {
+			public long getSortValue(long value) {
 				return -value;
 			}
 
 		};
 
-		public abstract int getSortValue(int value);
+		public abstract long getSortValue(long value);
 
 	}
 

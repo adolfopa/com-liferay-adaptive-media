@@ -15,6 +15,7 @@
 package com.liferay.adaptive.media.image.internal.finder;
 
 import com.liferay.adaptive.media.AMAttribute;
+import com.liferay.adaptive.media.AMDistanceComparator;
 import com.liferay.adaptive.media.AdaptiveMedia;
 import com.liferay.adaptive.media.finder.AMFinder;
 import com.liferay.adaptive.media.finder.AMQuery;
@@ -98,6 +99,9 @@ public class AMImageFinderImpl implements AMImageFinder {
 		Predicate<AMImageConfigurationEntry> filter =
 			amImageQueryBuilderImpl.getConfigurationEntryFilter();
 
+		AMDistanceComparator<AdaptiveMedia<AMImageProcessor>> comparator =
+			amImageQueryBuilderImpl.getComparator();
+
 		Stream<AMImageConfigurationEntry> amImageConfigurationEntryStream =
 			amImageConfigurationEntries.stream();
 
@@ -109,7 +113,7 @@ public class AMImageFinderImpl implements AMImageFinder {
 			amImageConfigurationEntry ->
 				_createMedia(fileVersion, uriFactory, amImageConfigurationEntry)
 		).sorted(
-			amImageQueryBuilderImpl.getComparator()
+			comparator.toComparator()
 		);
 	}
 
@@ -183,7 +187,7 @@ public class AMImageFinderImpl implements AMImageFinder {
 			properties.put(
 				contentTypeAMAttribute.getName(), amImageEntry.getMimeType());
 
-			AMAttribute<Object, Integer> contentLengthAMAttribute =
+			AMAttribute<Object, Long> contentLengthAMAttribute =
 				AMAttribute.getContentLengthAMAttribute();
 
 			properties.put(

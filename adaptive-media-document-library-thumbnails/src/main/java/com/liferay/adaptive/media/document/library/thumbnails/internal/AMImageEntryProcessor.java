@@ -139,7 +139,7 @@ public class AMImageEntryProcessor implements DLProcessor, ImageProcessor {
 			mediaMedia -> mediaMedia.getValueOptional(
 				AMAttribute.getContentLengthAMAttribute())
 		).orElse(
-			0
+			0L
 		);
 	}
 

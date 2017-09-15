@@ -15,6 +15,7 @@
 package com.liferay.adaptive.media.image.internal.finder;
 
 import com.liferay.adaptive.media.AMAttribute;
+import com.liferay.adaptive.media.AMDistanceComparator;
 import com.liferay.adaptive.media.AdaptiveMedia;
 import com.liferay.adaptive.media.finder.AMQuery;
 import com.liferay.adaptive.media.image.configuration.AMImageConfigurationEntry;
@@ -29,7 +30,6 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.util.Validator;
 
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -89,7 +89,9 @@ public class AMImageQueryBuilderImpl
 		return _amAttributes;
 	}
 
-	public Comparator<AdaptiveMedia<AMImageProcessor>> getComparator() {
+	public AMDistanceComparator<AdaptiveMedia<AMImageProcessor>>
+		getComparator() {
+
 		if (!_sortCriteria.isEmpty()) {
 			return new AMAttributeComparator(_sortCriteria);
 		}
@@ -98,7 +100,7 @@ public class AMImageQueryBuilderImpl
 			return new AMPropertyDistanceComparator(_amAttributes);
 		}
 
-		return (v1, v2) -> 0;
+		return (v1, v2) -> 0L;
 	}
 
 	public Predicate<AMImageConfigurationEntry> getConfigurationEntryFilter() {
