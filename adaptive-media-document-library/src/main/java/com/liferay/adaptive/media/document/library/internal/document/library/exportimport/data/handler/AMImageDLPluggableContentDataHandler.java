@@ -218,7 +218,7 @@ public class AMImageDLPluggableContentDataHandler
 				continue;
 			}
 
-			Optional<Integer> contentLengthOptional =
+			Optional<Long> contentLengthOptional =
 				adaptiveMedia.getValueOptional(
 					AMAttribute.getContentLengthAMAttribute());
 
