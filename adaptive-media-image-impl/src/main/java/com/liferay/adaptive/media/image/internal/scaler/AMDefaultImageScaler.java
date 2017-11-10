@@ -12,20 +12,22 @@
  * details.
  */
 
-package com.liferay.adaptive.media.image.internal.util;
+package com.liferay.adaptive.media.image.internal.scaler;
 
 import com.liferay.adaptive.media.exception.AMRuntimeException;
 import com.liferay.adaptive.media.image.configuration.AMImageConfigurationEntry;
 import com.liferay.adaptive.media.image.internal.processor.util.TiffOrientationTransformer;
-import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
+import com.liferay.adaptive.media.image.internal.util.RenderedImageUtil;
+import com.liferay.adaptive.media.image.scaler.AMImageScaled;
+import com.liferay.adaptive.media.image.scaler.AMImageScaler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.image.ImageToolUtil;
 import com.liferay.portal.kernel.repository.model.FileVersion;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 
 import java.awt.image.RenderedImage;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.Map;
@@ -36,15 +38,13 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Adolfo Pérez
  */
-@Component(immediate = true, service = ImageProcessor.class)
-public class ImageProcessor {
+@Component(
+	immediate = true, property = {"mime.type=*"}, service = AMImageScaler.class
+)
+public class AMDefaultImageScaler implements AMImageScaler {
 
-	public boolean isMimeTypeSupported(String mimeType) {
-		return ArrayUtil.contains(
-			_amImageMimeTypeProvider.getSupportedMimeTypes(), mimeType);
-	}
-
-	public RenderedImage scaleImage(
+	@Override
+	public AMImageScaled scaleImage(
 		FileVersion fileVersion,
 		AMImageConfigurationEntry amImageConfigurationEntry) {
 
@@ -58,10 +58,16 @@ public class ImageProcessor {
 			int maxHeight = GetterUtil.getInteger(properties.get("max-height"));
 			int maxWidth = GetterUtil.getInteger(properties.get("max-width"));
 
-			return ImageToolUtil.scale(renderedImage, maxHeight, maxWidth);
+			renderedImage = ImageToolUtil.scale(
+				renderedImage, maxHeight, maxWidth);
+
+			return new AMImageScaledImpl(
+				RenderedImageUtil.getRenderedImageContentStream(
+					renderedImage, fileVersion.getMimeType()),
+				renderedImage.getHeight(), renderedImage.getWidth());
 		}
-		catch (PortalException pe) {
-			throw new AMRuntimeException.IOException(pe);
+		catch (IOException | PortalException e) {
+			throw new AMRuntimeException.IOException(e);
 		}
 	}
 
@@ -73,9 +79,6 @@ public class ImageProcessor {
 			throw new AMRuntimeException.IOException(pe);
 		}
 	}
-
-	@Reference
-	private AMImageMimeTypeProvider _amImageMimeTypeProvider;
 
 	@Reference
 	private TiffOrientationTransformer _tiffOrientationTransformer;
