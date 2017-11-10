@@ -22,7 +22,7 @@ import com.liferay.adaptive.media.image.configuration.AMImageConfigurationEntry;
 import com.liferay.adaptive.media.image.configuration.AMImageConfigurationHelper;
 import com.liferay.adaptive.media.image.finder.AMImageQueryBuilder;
 import com.liferay.adaptive.media.image.internal.configuration.AMImageConfigurationEntryImpl;
-import com.liferay.adaptive.media.image.internal.util.ImageProcessor;
+import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
 import com.liferay.adaptive.media.image.model.AMImageEntry;
 import com.liferay.adaptive.media.image.processor.AMImageAttribute;
 import com.liferay.adaptive.media.image.processor.AMImageProcessor;
@@ -62,8 +62,8 @@ public class AMImageFinderImplTest {
 			_amImageConfigurationHelper);
 		_amImageFinderImpl.setAMImageEntryLocalService(
 			_amImageEntryLocalService);
+		_amImageFinderImpl.setAMImageMimeTypeProvider(_amImageMimeTypeProvider);
 		_amImageFinderImpl.setAMImageURLFactory(_amImageURLFactory);
-		_amImageFinderImpl.setImageProcessor(_imageProcessor);
 	}
 
 	@Test(expected = PortalException.class)
@@ -91,7 +91,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -152,7 +152,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -207,7 +207,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -312,7 +312,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -431,7 +431,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -498,7 +498,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -550,7 +550,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -623,7 +623,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -711,7 +711,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -803,7 +803,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -895,7 +895,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -987,7 +987,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -1090,7 +1090,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -1237,7 +1237,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -1369,7 +1369,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -1407,7 +1407,7 @@ public class AMImageFinderImplTest {
 	@Test
 	public void testGetMediaWhenNotSupported() throws Exception {
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			false
 		);
@@ -1472,7 +1472,7 @@ public class AMImageFinderImplTest {
 		);
 
 		Mockito.when(
-			_imageProcessor.isMimeTypeSupported(Mockito.anyString())
+			_amImageMimeTypeProvider.isMimeTypeSupported(Mockito.anyString())
 		).thenReturn(
 			true
 		);
@@ -1528,11 +1528,11 @@ public class AMImageFinderImplTest {
 		Mockito.mock(AMImageEntryLocalService.class);
 	private final AMImageFinderImpl _amImageFinderImpl =
 		new AMImageFinderImpl();
+	private final AMImageMimeTypeProvider _amImageMimeTypeProvider =
+		Mockito.mock(AMImageMimeTypeProvider.class);
 	private final AMImageURLFactory _amImageURLFactory = Mockito.mock(
 		AMImageURLFactory.class);
 	private final FileEntry _fileEntry = Mockito.mock(FileEntry.class);
 	private final FileVersion _fileVersion = Mockito.mock(FileVersion.class);
-	private final ImageProcessor _imageProcessor = Mockito.mock(
-		ImageProcessor.class);
 
 }
