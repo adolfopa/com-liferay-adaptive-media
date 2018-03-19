@@ -20,11 +20,7 @@
 	<aui:nav cssClass="navbar-nav">
 		<portlet:renderURL var="viewImageConfigurationEntriesURL" />
 
-		<aui:nav-item
-			href="<%= viewImageConfigurationEntriesURL %>"
-			label="image-resolutions"
-			selected="<%= true %>"
-		/>
+		<aui:nav-item href="<%= viewImageConfigurationEntriesURL %>" label="image-resolutions" selected="<%= true %>" />
 	</aui:nav>
 </aui:nav-bar>
 
