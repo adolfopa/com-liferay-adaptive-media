@@ -1,4 +1,5 @@
 FROM mdelapenya/liferay-portal:7-ce-ga5-tomcat-hsql
+
 MAINTAINER Sergio González <sergio.gonzalez@liferay.com>
 
 COPY *.jar $LIFERAY_HOME/osgi/modules/
