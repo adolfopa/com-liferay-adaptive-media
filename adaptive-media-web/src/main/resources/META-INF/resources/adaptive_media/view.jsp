@@ -34,7 +34,7 @@ List<AMImageConfigurationEntry> selectedConfigurationEntries = (List)request.get
 >
 	<liferay-frontend:management-bar-buttons>
 		<liferay-frontend:management-bar-sidenav-toggler-button
-			disabled="<%= (selectedConfigurationEntries.size() <= 0) %>"
+			disabled="<%= selectedConfigurationEntries.size() <= 0 %>"
 			icon="info-circle"
 			label="info"
 		/>
