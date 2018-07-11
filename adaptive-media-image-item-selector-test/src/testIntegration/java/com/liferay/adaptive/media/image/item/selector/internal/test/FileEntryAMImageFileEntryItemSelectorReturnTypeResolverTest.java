@@ -34,7 +34,6 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.registry.Registry;
@@ -93,8 +92,8 @@ public class FileEntryAMImageFileEntryItemSelectorReturnTypeResolverTest {
 
 		Assert.assertEquals(
 			DLUtil.getPreviewURL(
-				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
-				false, false),
+				fileEntry, fileEntry.getFileVersion(), null,
+				_IMAGE_PREVIEW_QUERY_STRING, false, false),
 			url);
 
 		Assert.assertEquals(fileEntry.getFileEntryId(), fileEntryId);
@@ -140,6 +139,8 @@ public class FileEntryAMImageFileEntryItemSelectorReturnTypeResolverTest {
 			throw new RuntimeException(e);
 		}
 	}
+
+	private static final String _IMAGE_PREVIEW_QUERY_STRING = "&imagePreview=1";
 
 	private static final String _RESOLVER_FILTER =
 		"(objectClass=com.liferay.adaptive.media.image.item.selector." +
