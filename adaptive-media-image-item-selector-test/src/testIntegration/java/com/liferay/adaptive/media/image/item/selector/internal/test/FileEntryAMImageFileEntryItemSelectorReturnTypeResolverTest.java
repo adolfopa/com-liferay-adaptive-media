@@ -19,6 +19,7 @@ import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.item.selector.ItemSelectorReturnTypeResolver;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Group;
@@ -91,9 +92,9 @@ public class FileEntryAMImageFileEntryItemSelectorReturnTypeResolverTest {
 		long fileEntryId = jsonObject.getLong("fileEntryId");
 
 		Assert.assertEquals(
-			DLUtil.getPreviewURL(
-				fileEntry, fileEntry.getFileVersion(), null,
-				_IMAGE_PREVIEW_QUERY_STRING, false, false),
+			DLUtil.getImagePreviewURL(
+				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
+				false, false),
 			url);
 
 		Assert.assertEquals(fileEntry.getFileEntryId(), fileEntryId);
@@ -139,8 +140,6 @@ public class FileEntryAMImageFileEntryItemSelectorReturnTypeResolverTest {
 			throw new RuntimeException(e);
 		}
 	}
-
-	private static final String _IMAGE_PREVIEW_QUERY_STRING = "&imagePreview=1";
 
 	private static final String _RESOLVER_FILTER =
 		"(objectClass=com.liferay.adaptive.media.image.item.selector." +
