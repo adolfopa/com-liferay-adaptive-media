@@ -110,6 +110,7 @@
 			_onSelectedImageChange: function(editor, imageSrc, selectedItem) {
 				var el;
 				var instance = this;
+				var isSelectionEmpty = editor.isSelectionEmpty();
 
 				if (selectedItem.returnType === STR_ADAPTIVE_MEDIA_URL_RETURN_TYPE) {
 					el = instance._getPictureElement(selectedItem);
@@ -119,7 +120,10 @@
 				}
 
 				editor.insertElement(el);
-				editor.execCommand('enter');
+
+				if (isSelectionEmpty) {
+					editor.execCommand('enter');
+				}
 			}
 		}
 	);
