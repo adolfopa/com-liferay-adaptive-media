@@ -75,7 +75,7 @@ public class FileEntryAMImageURLItemSelectorReturnTypeResolver
 		}
 		else {
 			previewURL = PortletFileRepositoryUtil.getPortletFileEntryURL(
-				themeDisplay, fileEntry, _IMAGE_PREVIEW_QUERY_STRING, false);
+				themeDisplay, fileEntry, "&imagePreview=1", false);
 		}
 
 		fileEntryJSONObject.put("defaultSource", previewURL);
@@ -116,8 +116,6 @@ public class FileEntryAMImageURLItemSelectorReturnTypeResolver
 
 		return sourceJSONObject;
 	}
-
-	private static final String _IMAGE_PREVIEW_QUERY_STRING = "&imagePreview=1";
 
 	@Reference
 	private MediaQueryProvider _mediaQueryProvider;
