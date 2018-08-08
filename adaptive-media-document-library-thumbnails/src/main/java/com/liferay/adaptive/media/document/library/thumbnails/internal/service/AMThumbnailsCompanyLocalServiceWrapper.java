@@ -62,7 +62,7 @@ public class AMThumbnailsCompanyLocalServiceWrapper
 		catch (AMImageConfigurationException | IOException e) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(
-					"Couldn't automatically create Adaptive Media thumbnail " +
+					"could not automatically create Adaptive Media thumbnail " +
 						"configurations",
 					e);
 			}
