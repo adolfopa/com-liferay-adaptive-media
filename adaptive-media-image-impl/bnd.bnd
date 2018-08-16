@@ -1,6 +1,6 @@
 Bundle-Name: Liferay Adaptive Media Image Implementation
 Bundle-SymbolicName: com.liferay.adaptive.media.image.impl
-Bundle-Version: 1.0.12
+Bundle-Version: 1.0.13
 Import-Package:\
 	!com.adobe.xmp.*,\
 	\
