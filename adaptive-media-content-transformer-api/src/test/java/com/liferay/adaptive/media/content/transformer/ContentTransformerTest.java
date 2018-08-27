@@ -221,9 +221,9 @@ public class ContentTransformerTest {
 
 	}
 
-	private final class MockServiceTrackerMap implements
-		ServiceTrackerMap<ContentTransformerContentType,
-			List<ContentTransformer>> {
+	private final class MockServiceTrackerMap
+		implements ServiceTrackerMap
+			<ContentTransformerContentType, List<ContentTransformer>> {
 
 		@Override
 		public void close() {
@@ -268,8 +268,9 @@ public class ContentTransformerTest {
 			return _contentTransformers.values();
 		}
 
-		private final Map<ContentTransformerContentType,
-			List<ContentTransformer>> _contentTransformers = new HashMap<>();
+		private final Map
+			<ContentTransformerContentType, List<ContentTransformer>>
+				_contentTransformers = new HashMap<>();
 
 	}
 
