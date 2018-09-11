@@ -58,7 +58,7 @@ public class AMDLStoreConvertProcess implements DLStoreConvertProcess {
 		int count = _amImageEntryLocalService.getAMImageEntriesCount();
 
 		MaintenanceUtil.appendStatus(
-			"Migrating images in " + count + " amImageEntries");
+			"Migrating images in " + count + " adaptive media image entries");
 
 		ActionableDynamicQuery actionableDynamicQuery =
 			_amImageEntryLocalService.getActionableDynamicQuery();
