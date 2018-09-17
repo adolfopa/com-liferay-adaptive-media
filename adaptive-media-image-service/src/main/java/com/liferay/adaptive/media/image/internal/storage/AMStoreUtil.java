@@ -14,8 +14,8 @@
 
 package com.liferay.adaptive.media.image.internal.storage;
 
-import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.repository.model.FileVersion;
+import com.liferay.portal.kernel.util.StringBundler;
 
 /**
  * @author Roberto Díaz
