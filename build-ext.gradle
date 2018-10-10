@@ -22,6 +22,9 @@ buildscript {
 
 apply plugin: CoverallsPlugin
 
+task dumpJacoco
+task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport)
+
 allprojects {
 	apply plugin: JacocoPlugin
 
@@ -200,7 +203,7 @@ def getImageNameWithUserAndVersion() {
 	return getImageNameWithUser() + ":" + getImageVersion()
 }
 
-task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+jacocoRootReport {
 	dependsOn = subprojects.findAll{!it.childProjects}.test
 	additionalSourceDirs = files(subprojects.findAll{!it.childProjects}.sourceSets.main.allSource.srcDirs)
 	sourceDirectories = files(subprojects.findAll{!it.childProjects}.sourceSets.main.allSource.srcDirs)
@@ -249,7 +252,7 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 	}
 }
 
-task dumpJacoco {
+dumpJacoco {
 	doLast {
 		def serverUrl = 'service:jmx:rmi:///jndi/rmi://localhost:8099/jmxrmi'
 		String beanName = "org.jacoco:type=Runtime"
