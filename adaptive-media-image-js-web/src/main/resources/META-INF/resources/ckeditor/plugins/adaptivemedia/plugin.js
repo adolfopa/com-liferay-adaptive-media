@@ -1,9 +1,9 @@
 (function() {
 	var Lang = AUI().Lang;
 
-	var STR_ADAPTIVE_MEDIA_URL_RETURN_TYPE = 'com.liferay.adaptive.media.image.item.selector.AMImageURLItemSelectorReturnType';
-
 	var STR_ADAPTIVE_MEDIA_FILE_ENTRY_RETURN_TYPE = 'com.liferay.adaptive.media.image.item.selector.AMImageFileEntryItemSelectorReturnType';
+
+	var STR_ADAPTIVE_MEDIA_URL_RETURN_TYPE = 'com.liferay.adaptive.media.image.item.selector.AMImageURLItemSelectorReturnType';
 
 	var TPL_PICTURE_TAG = '<picture data-fileEntryId="{fileEntryId}">{sources}<img src="{defaultSrc}"></picture>';
 
@@ -41,6 +41,22 @@
 						}
 					}
 				);
+			},
+
+			_getImgElement: function(imageSrc, selectedItem) {
+				var imgEl = CKEDITOR.dom.element.createFromHtml('<img>');
+
+				if (selectedItem.returnType === STR_ADAPTIVE_MEDIA_FILE_ENTRY_RETURN_TYPE) {
+					var itemValue = JSON.parse(selectedItem.value);
+
+					imgEl.setAttribute('src', itemValue.url);
+					imgEl.setAttribute('data-fileEntryId', itemValue.fileEntryId);
+				}
+				else {
+					imgEl.setAttribute('src', imageSrc);
+				}
+
+				return imgEl;
 			},
 
 			_getPictureElement: function(selectedItem) {
@@ -91,22 +107,6 @@
 				return pictureEl;
 			},
 
-			_getImgElement: function(imageSrc, selectedItem) {
-				var imgEl = CKEDITOR.dom.element.createFromHtml('<img>');
-
-				if (selectedItem.returnType === STR_ADAPTIVE_MEDIA_FILE_ENTRY_RETURN_TYPE) {
-					var itemValue = JSON.parse(selectedItem.value);
-
-					imgEl.setAttribute('src', itemValue.url);
-					imgEl.setAttribute('data-fileEntryId', itemValue.fileEntryId);
-				}
-				else {
-					imgEl.setAttribute('src', imageSrc);
-				}
-
-				return imgEl;
-			},
-
 			_isEmptySelection: function(editor) {
 				var selection = editor.getSelection();
 
@@ -116,9 +116,9 @@
 			},
 
 			_onSelectedImageChange: function(editor, imageSrc, selectedItem) {
-				var el;
 				var instance = this;
-				var isSelectionEmpty = instance._isEmptySelection(editor);
+
+				var el;
 
 				if (selectedItem.returnType === STR_ADAPTIVE_MEDIA_URL_RETURN_TYPE) {
 					el = instance._getPictureElement(selectedItem);
@@ -129,7 +129,7 @@
 
 				editor.insertHtml(el.getOuterHtml());
 
-				if (isSelectionEmpty) {
+				if (instance._isEmptySelection(editor)) {
 					editor.execCommand('enter');
 				}
 			}
