@@ -131,7 +131,7 @@
 
 				if (instance._isEmptySelection(editor)) {
 					if (AUI.Env.UA.ie >= 9) {
-						editor.insertHtml(el.getOuterHtml() + ' <br> ');
+						editor.insertHtml(el.getOuterHtml() + ' <br /> ');
 					}
 					else {
 						editor.execCommand('enter');
