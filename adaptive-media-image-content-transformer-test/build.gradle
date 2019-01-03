@@ -6,4 +6,5 @@ dependencies {
 	testIntegrationCompile project(":apps:adaptive-media:adaptive-media-api")
 	testIntegrationCompile project(":apps:adaptive-media:adaptive-media-content-transformer-api")
 	testIntegrationCompile project(":apps:adaptive-media:adaptive-media-image-api")
+	testIntegrationCompile project(":core:petra:petra-string")
 }
